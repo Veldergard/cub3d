@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/30 08:11:15 by olaurine          #+#    #+#             */
-/*   Updated: 2020/05/01 20:12:29 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/08/21 23:58:59 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,11 @@
 
 char	*ft_strchr(const char *s, int c)
 {
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == (unsigned char)c)
-			return ((char*)s + i);
-		i++;
-	}
-	if (s[i] == (unsigned char)c)
-		return ((char*)s + i);
+	if (!s)
+		return (NULL);
+	while (*s && *s != c)
+		s++;
+	if (*s == (char)c)
+		return ((char*)s);
 	return (NULL);
 }
