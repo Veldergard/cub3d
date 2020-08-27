@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/08/27 17:37:08 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/08/27 18:15:07 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ static int		parse_line(t_data *data, char *line)
 	skip_spaces(line, &i);
 	if (!line || !*line)
 		return (0);
-	if ((line[i] == '1') && line[i] != '\0')
+	if (line[i] == '1')
 		data->error = parse_map(data, line, &i);
 	else if (line[i] == 'R' && line[i + 1] == ' ')
 		data->error = parse_resolution(data, line, &i);
