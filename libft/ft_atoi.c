@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/30 18:47:58 by olaurine          #+#    #+#             */
-/*   Updated: 2020/05/06 19:50:34 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/08/23 22:51:37 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,32 @@ int		ft_atoi(const char *nptr)
 			return (-1);
 		numb = (numb * 10) + (*nptr - '0');
 		nptr++;
+	}
+	return (numb * porn);
+}
+
+int		ft_atoi_i(const char *nptr, int *i)
+{
+	int numb;
+	int porn;
+
+	porn = 1;
+	while (nptr[*i] && ((nptr[*i] >= 9 && nptr[*i] <= 13) || nptr[*i] == ' '))
+		(*i)++;
+	if (nptr[*i] == '-' || nptr[*i] == '+')
+	{
+		porn = nptr[*i] == '-' ? -1 : 1;
+		(*i)++;
+	}
+	numb = 0;
+	while (nptr[*i] >= '0' && nptr[*i] <= '9')
+	{
+		if (numb < 0 && porn < 0)
+			return (0);
+		else if (numb < 0 && porn > 0)
+			return (-1);
+		numb = (numb * 10) + (nptr[*i] - '0');
+		(*i)++;
 	}
 	return (numb * porn);
 }

@@ -6,12 +6,12 @@
 #    By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/21 22:59:15 by olaurine          #+#    #+#              #
-#    Updated: 2020/08/21 23:01:46 by olaurine         ###   ########.fr        #
+#    Updated: 2020/08/26 21:34:58 by olaurine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
-SRC =
+SRC = main.c cub_parser.c
 OBJ = $(patsubst %.c,%.o,$(SRC))
 LIBFT = libft/libft.a
 CC = gcc

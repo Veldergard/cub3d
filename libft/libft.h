@@ -6,12 +6,13 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/29 22:27:15 by olaurine          #+#    #+#             */
-/*   Updated: 2020/08/22 00:02:34 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/08/27 01:42:09 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
+
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -78,5 +79,7 @@ t_list				*ft_lstmap(t_list *lst, void *(*f)(void*),
 								void (*del)(void*));
 int					get_next_line(int fd, char **line);
 int					ft_strcmp(char *s1, char *s2);
+int					ft_num_len(char *s);
+int					ft_atoi_i(const char *nptr, int *i);
 
 #endif
