@@ -1,9 +1,9 @@
 /*
-** mlx_int.h for mlx in 
-** 
+** mlx_int.h for mlx in
+**
 ** Made by Charlie Root
 ** Login   <ol@epitech.net>
-** 
+**
 ** Started on  Mon Jul 31 16:45:48 2000 Charlie Root
 ** Last update Wed May 25 16:44:16 2011 Olivier Crouzet
 */
@@ -129,7 +129,7 @@ void			*mlx_new_image();
 int				shm_att_pb();
 int				mlx_int_get_visual(t_xvar *xvar);
 int				mlx_int_set_win_event_mask(t_xvar *xvar);
-int				(*(mlx_int_param_event[37]))();
+// int				(*(mlx_int_param_event[37]))();
 int				mlx_int_str_str_cote(char *str,char *find,int len);
 int				mlx_int_str_str(char *str,char *find,int len);
 

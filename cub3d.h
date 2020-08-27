@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/08/27 01:42:13 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/08/27 17:34:28 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include "libft/libft.h"
+# include "mlx.h"
 
 # define NONE 0xFF000000
 

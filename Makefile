@@ -6,16 +6,17 @@
 #    By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/21 22:59:15 by olaurine          #+#    #+#              #
-#    Updated: 2020/08/26 21:34:58 by olaurine         ###   ########.fr        #
+#    Updated: 2020/08/27 17:37:57 by olaurine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
 SRC = main.c cub_parser.c
 OBJ = $(patsubst %.c,%.o,$(SRC))
-LIBFT = libft/libft.a
+LIBFT = libft
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Imlx_lnx
+OFLAGS = -Imlx_lnx -Lmlx_lnx -lmlx -L$(LIBFT) -lft -lXext -lX11 -lm -lbsd
 
 .PHONY: all clean fclean re
 
@@ -25,8 +26,7 @@ libft/libft.a:
 	make all -C libft
 
 $(NAME): $(OBJ)
-	@[ -f $@ ] || cp libft/libft.a $(NAME)
-	ar rcs $(NAME) $?
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(OFLAGS)
 
 %.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@

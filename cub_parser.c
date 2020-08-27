@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/08/27 02:28:04 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/08/27 17:37:08 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,11 @@ int		ft_xpm(t_data *data, unsigned int **adr, char *file)
 	if ((fd = open(file, O_RDONLY)) == -1 || errno)
 		return (-1);
 	close(fd);
-	img = mlx_xpm_file_to_image(s->mlx.ptr, file, &tab[0], &tab[1]);
-	if (img == NULL || tab[0] != 64 || tab[1] != 64)
-		return (-1);
-	*adr = (unsigned int *)mlx_get_data_addr(img, &tab[2], &tab[3], &tab[4]);
-	free(img);
+	// img = mlx_xpm_file_to_image(data->mlx.ptr, file, &tab[0], &tab[1]);
+	// if (img == NULL || tab[0] != 64 || tab[1] != 64)
+		// return (-1);
+	// *adr = (unsigned int *)mlx_get_data_addr(img, &tab[2], &tab[3], &tab[4]);
+	// free(img);
 	return (0);
 }
 
