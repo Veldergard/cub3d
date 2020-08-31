@@ -123,16 +123,11 @@ int		ft_slablen(t_data *data, char *line)
 	count = 0;
 	while (line[i])
 	{
-		if (line[i] == '0' || line[i] == '1' || line[i] == '2')
-			count++;
-		else if (line[i] == 'N' || line[i] == 'S' || line[i] == 'W')
-			count++;
-		else if (line[i] == 'E')
+		if (line[i] == '0' || line[i] == '1' || line[i] == '2' || line[i] == ' '
+		|| line[i] == 'N' || line[i] == 'S' || line[i] == 'W' || line[i] == 'E')
 			count++;
 		i++;
 	}
-	if (data->map.x != 0 && data->map.x != count)
-		return (-1);
 	return (count);
 }
 
@@ -144,17 +139,19 @@ char	*ft_slab(t_data *data, char *line, int *i)
 	if (!(slab = malloc(sizeof(char) * (ft_slablen(data, line) + 1))))
 		return (NULL);
 	j = 0;
+	*i = 0;
 	while (line[*i])
 	{
-		if ((line[*i] == '0' || line[*i] == '1' || line[*i] == 'N')
-			|| (line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W'))
+		if (line[*i] == '0' || line[*i] == '1' || line[*i] == 'N'
+		|| line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W'
+		|| line[*i] == ' ')
 			slab[j++] = line[*i];
 		else if (line[*i] == '2')
 		{
 			slab[j++] = line[*i];
 			data->map.spr++;
 		}
-		else if (line[*i] != ' ')
+		else
 		{
 			free(slab);
 			return (NULL);
@@ -186,8 +183,6 @@ int		parse_map(t_data *data, char *line, int *i)
 		free(data->map.tab);
 	data->map.tab = tmp;
 	data->map.y++;
-	if ((data->map.x = ft_slablen(data, line)) == -1)
-		return (-13);
 	return (0);
 }
 
