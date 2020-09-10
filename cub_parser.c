@@ -83,11 +83,11 @@ int		ft_xpm(t_data *data, unsigned int **adr, char *file)
 	if ((fd = open(file, O_RDONLY)) == -1 || errno)
 		return (-1);
 	close(fd);
-	// img = mlx_xpm_file_to_image(data->mlx.ptr, file, &tab[0], &tab[1]);
-	// if (img == NULL || tab[0] != 64 || tab[1] != 64)
-		// return (-1);
-	// *adr = (unsigned int *)mlx_get_data_addr(img, &tab[2], &tab[3], &tab[4]);
-	// free(img);
+	img = mlx_xpm_file_to_image(data->mlx.ptr, file, &tab[0], &tab[1]);
+	if (img == NULL || tab[0] != 64 || tab[1] != 64)
+		return (-1);
+	*adr = (unsigned int *)mlx_get_data_addr(img, &tab[2], &tab[3], &tab[4]);
+	free(img);
 	return (0);
 }
 
@@ -144,13 +144,8 @@ char	*ft_slab(t_data *data, char *line, int *i)
 	{
 		if (line[*i] == '0' || line[*i] == '1' || line[*i] == 'N'
 		|| line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W'
-		|| line[*i] == ' ')
+		|| line[*i] == ' ' || line[*i] == '2')
 			slab[j++] = line[*i];
-		else if (line[*i] == '2')
-		{
-			slab[j++] = line[*i];
-			data->map.spr++;
-		}
 		else
 		{
 			free(slab);
@@ -158,6 +153,8 @@ char	*ft_slab(t_data *data, char *line, int *i)
 		}
 		(*i)++;
 	}
+	if (j > map.x)
+		map.x = j;
 	slab[j] = '\0';
 	return (slab);
 }

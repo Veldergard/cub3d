@@ -23,12 +23,28 @@
 
 # define NONE 0xFF000000
 
+typedef struct		s_player
+{
+	float			x;
+	float			y;
+	float			dir;
+	char			chr;
+}					t_player;
+
+typedef struct		s_img
+{
+	void			*img;
+	char			*addr;
+	int				bits_per_pixel;
+	int				line_length;
+	int				endian;
+}					t_img;
+
 typedef struct		s_map
 {
 	char			**tab;
 	int				x;
 	int				y;
-	int				spr;
 }					t_map;
 
 typedef struct	s_texture
@@ -54,6 +70,7 @@ typedef struct	s_data
 	t_texture	texture;
 	int			error; // error code
 	t_map		map;
+	t_player	player;
 }				t_data;
 
 int				cub_parse(char *file, t_data *data);
