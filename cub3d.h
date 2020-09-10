@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/08/27 17:34:28 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/09/10 09:50:51 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@
 # include "mlx.h"
 
 # define NONE 0xFF000000
+
+typedef struct		s_mlx
+{
+	void			*ptr;
+}					t_mlx;
 
 typedef struct		s_player
 {
@@ -71,6 +76,7 @@ typedef struct	s_data
 	int			error; // error code
 	t_map		map;
 	t_player	player;
+	t_mlx		mlx;
 }				t_data;
 
 int				cub_parse(char *file, t_data *data);

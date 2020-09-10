@@ -6,22 +6,23 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/08/27 18:14:54 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/09/10 09:26:46 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	cub_pixel_put(t_img img, int x, int y, int color)
+void	cub_pixel_put(t_img *img, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = img->addr + (y * data->line_length + x * (img->bits_per_pixel / 8));
+	dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
 
 int		render_next_frame(t_data *data)
 {
+	return (data->error);
 }
 
 void	cub_start(t_data *data)
@@ -60,6 +61,7 @@ char	*cub_make_str(t_data *data, int i)
 		j++;
 	}
 	s[data->map.x] = 0;
+	return (s);
 }
 
 int		cub_make_sqr_map(t_data *data)
@@ -70,7 +72,7 @@ int		cub_make_sqr_map(t_data *data)
 	i = 0;
 	while (data->map.tab[i])
 	{
-		if (ft_strlen(data->map.tab[i]) != data->map.x)
+		if ((int)ft_strlen(data->map.tab[i]) != data->map.x)
 		{
 			temp = data->map.tab[i];
 			if (!(data->map.tab[i] = cub_make_str(data, i)))
@@ -153,7 +155,7 @@ int		cub_check_map(t_data *data)
 				(data->map.tab[i][j + 1] != ' ' ||	data->map.tab[i][j + 1] != 0
 				|| data->map.tab[i][j + 1] != '1') || (data->map.tab[i + 1] &&
 				(data->map.tab[i + 1][j] != '1' ||
-				data->map.tab[i + 1][j] != ' ')) || i > 0 &&
+				data->map.tab[i + 1][j] != ' ')) || (i > 0 &&
 				(data->map.tab[i - 1][j] != '1' ||
 				data->map.tab[i - 1][j] != ' ')))
 					return (0);
