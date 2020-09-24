@@ -6,20 +6,21 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/08/27 18:14:54 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/09/10 20:23:23 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	cub_pixel_put(t_img img, int x, int y, int color)
+void	cub_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = img->addr + (y * data->line_length + x * (img->bits_per_pixel / 8));
+	dst = data->img.addr + y * data->img.line_length + x * (data->img.bits_per_pixel / 8);
 	*(unsigned int*)dst = color;
 }
 
+<<<<<<< HEAD
 float	distance(float ax, float ay, float bx, float by, float ang)
 {
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
@@ -188,123 +189,79 @@ void	cub_start(t_data *data)
 char	*cub_make_str(t_data *data, int i)
 {
 	char *s;
+=======
+void	draw_rect(t_data *data, int off_x, int off_y, uint32_t color)
+{
+	int i;
+>>>>>>> 3563cacaa2ea28e4840e854c53c84dfd66de2a28
 	int j;
 
-	if (!(s = malloc(data->map.x + 1)))
-		return (NULL);
-	j = 0;
-	while (data->map.tab[i][j])
-	{
-		s[j] = data->map.tab[i][j];
-		j++;
-	}
-	while (j < data->map.x)
-	{
-		s[j] = ' ';
-		j++;
-	}
-	s[data->map.x] = 0;
-}
-
-int		cub_make_sqr_map(t_data *data)
-{
-	int		i;
-	char	*temp;
-
 	i = 0;
-	while (data->map.tab[i])
+	while (i < data->rect.x)
 	{
-		if (ft_strlen(data->map.tab[i]) != data->map.x)
+		j = 0;
+		while (j < data->rect.y)
 		{
-			temp = data->map.tab[i];
-			if (!(data->map.tab[i] = cub_make_str(data, i)))
-			{
-				data->map.tab[i] = temp;
-				return (0);
-			}
-			free(temp);
+			cub_pixel_put(data, j + off_x, i + off_y, color);
+			j++;
 		}
 		i++;
 	}
-	return (1);
 }
 
-void	cub_set_dir(t_data *data, char c)
-{
-	if (c == 'E')
-	{
-		data->player.chr = 'E';
-		data->player.dir = 0;
-	}
-	else if (c == 'N')
-	{
-		data->player.chr = 'N';
-		data->player.dir = 0.5;
-	}
-	else if (c == 'W')
-	{
-		data->player.chr = 'W';
-		data->player.dir = 1;
-	}
-	else if (c == 'S')
-	{
-		data->player.chr = 'S';
-		data->player.dir = 1.5;
-	}
-}
-
-int		cub_set_player(t_data *data)
+void	draw_map(t_data *data)
 {
 	int i;
 	int j;
+	uint32_t color;
 
 	i = 0;
+	color = 0x32BFE6;
 	while (data->map.tab[i])
 	{
 		j = 0;
 		while (data->map.tab[i][j])
 		{
-			if (ft_strchr("NSWE", data->map.tab[i][j]))
-			{
-				if (data->player.chr)
-					return (0);
-				data->player.x = j;
-				data->player.y = i;
-				cub_set_dir(data, data->map.tab[i][j]);
-			}
+			if (data->map.tab[i][j] == '1')
+				draw_rect(data, j * data->rect.x, i * data->rect.y, color);
 			j++;
 		}
 		i++;
 	}
-	return (1);
 }
 
-int		cub_check_map(t_data *data)
+void	draw_player(t_data *data)
 {
-	int i;
-	int j;
+	uint32_t color;
 
-	i = -1;
-	while (data->map.tab[++i])
-	{
-		j = -1;
-		while (data->map.tab[i][++j])
-		{
-			if (data->map.tab[i][j] == ' ')
-			{
-				if ((j > 0 && (data->map.tab[i][j - 1] != ' ' ||
-				data->map.tab[i][j - 1] != '1')) ||
-				(data->map.tab[i][j + 1] != ' ' ||	data->map.tab[i][j + 1] != 0
-				|| data->map.tab[i][j + 1] != '1') || (data->map.tab[i + 1] &&
-				(data->map.tab[i + 1][j] != '1' ||
-				data->map.tab[i + 1][j] != ' ')) || i > 0 &&
-				(data->map.tab[i - 1][j] != '1' ||
-				data->map.tab[i - 1][j] != ' ')))
-					return (0);
-			}
-		}
-	}
-	return (1);
+	color = 0xE2F029;
+	draw_rect(data, (int)(data->player.x * data->rect.x - data->rect.x / 2), (int)(data->player.y * data->rect.y - data->rect.y / 2), color);
+}
+
+int		render_next_frame(t_data *data)
+{
+	draw_map(data);
+	draw_player(data);
+	mlx_put_image_to_window(data->mlx.ptr, data->win.ptr, data->img.img, 0, 0);
+	mlx_do_sync(data->mlx.ptr);
+	return (data->error);
+}
+
+int		close_game(t_data *data)
+{
+	exit(0);
+	return (data->error);
+}
+
+void	cub_start(t_data *data)
+{
+	data->win.ptr = mlx_new_window(data->mlx.ptr, data->win.x, data->win.y, "cub2d");
+	data->img.img = mlx_new_image(data->mlx.ptr, data->win.x, data->win.y);
+	data->img.addr = mlx_get_data_addr(data->img.img, &data->img.bits_per_pixel, &data->img.line_length,
+								&data->img.endian);
+	mlx_loop_hook(data->mlx.ptr, render_next_frame, data);
+	mlx_hook(data->win.ptr, 17, 1L << 17, close_game, data);
+	mlx_loop(data->mlx.ptr);
 }
 
 void	cub_init(char *cub)
@@ -314,6 +271,9 @@ void	cub_init(char *cub)
 	ft_bzero(&data, sizeof(data));
 	data.texture.ceiling = NONE;
 	data.texture.floor = NONE;
+	data.mlx.ptr = mlx_init();
+	data.rect.x = 45;
+	data.rect.y = 45;
 	cub_parse(cub, &data);
 	cub_make_sqr_map(&data);
 	cub_set_player(&data);

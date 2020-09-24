@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/08/27 18:15:07 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/09/10 20:00:31 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,18 @@ int		skip_spaces(char *line, int *i)
 
 int		parse_resolution(t_data *data, char *line, int *i)
 {
-	if (data->window.x != 0 || data->window.y != 0)
+	if (data->win.x != 0 || data->win.y != 0)
 		return (-3);
 	(*i)++;
-	data->window.x = ft_atoi_i(line, i);
-	data->window.y = ft_atoi_i(line, i);
-	if (data->window.x > 4096)
-		data->window.x = 4096;
-	if (data->window.y > 2304)
-		data->window.y = 2304;
+	data->win.x = ft_atoi_i(line, i);
+	data->win.y = ft_atoi_i(line, i);
+	if (data->win.x > 1920)
+		data->win.x = 1920;
+	if (data->win.y > 1080)
+		data->win.y = 1080;
 	(*i) += ft_num_len(line);
 	skip_spaces(line, i);
-	if (data->window.x <= 0 || data->window.y <= 0 || line[*i])
+	if (data->win.x <= 0 || data->win.y <= 0 || line[*i])
 		return (-4);
 	return (0);
 }
@@ -71,7 +71,7 @@ int		check_ending(char *file, char *ext)
 	return (0);
 }
 
-int		ft_xpm(t_data *data, unsigned int **adr, char *file)
+int		cub_xpm(t_data *data, unsigned int **adr, char *file)
 {
 	int		fd;
 	void	*img;
@@ -109,12 +109,12 @@ int		parse_texture(t_data *data, unsigned int **adr, char *line, int *i)
 	while (line[*i] != ' ' && line[*i] != '\0')
 		file[j++] = line[(*i)++];
 	file[j] = '\0';
-	j = ft_xpm(data, adr, file);
+	j = cub_xpm(data, adr, file);
 	free(file);
 	return (j == -1 ? -9 : 0);
 }
 
-int		ft_slablen(t_data *data, char *line)
+int		cub_slablen(char *line)
 {
 	int	i;
 	int	count;
@@ -131,12 +131,12 @@ int		ft_slablen(t_data *data, char *line)
 	return (count);
 }
 
-char	*ft_slab(t_data *data, char *line, int *i)
+char	*cub_slab(t_data *data, char *line, int *i)
 {
 	char	*slab;
 	int		j;
 
-	if (!(slab = malloc(sizeof(char) * (ft_slablen(data, line) + 1))))
+	if (!(slab = malloc(sizeof(char) * (cub_slablen(line) + 1))))
 		return (NULL);
 	j = 0;
 	*i = 0;
@@ -153,8 +153,8 @@ char	*ft_slab(t_data *data, char *line, int *i)
 		}
 		(*i)++;
 	}
-	if (j > map.x)
-		map.x = j;
+	if (j > data->map.x)
+		data->map.x = j;
 	slab[j] = '\0';
 	return (slab);
 }
@@ -170,7 +170,7 @@ int		parse_map(t_data *data, char *line, int *i)
 	j = -1;
 	while (++j < data->map.y)
 		tmp[j] = data->map.tab[j];
-	if ((tmp[data->map.y] = ft_slab(data, line, i)) == NULL)
+	if ((tmp[data->map.y] = cub_slab(data, line, i)) == NULL)
 	{
 		free(tmp);
 		return (-12);
