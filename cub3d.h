@@ -19,9 +19,13 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include "libft/libft.h"
+# include <math.h>
 # include "mlx.h"
 
 # define NONE 0xFF000000
+# define PI 3.14159265359
+# define PI2 PI / 2
+# define PI3 3 * PI / 2
 
 typedef struct		s_player
 {

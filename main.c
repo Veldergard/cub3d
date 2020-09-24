@@ -20,7 +20,151 @@ void	cub_pixel_put(t_img img, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-int		render_next_frame(t_data *data)
+float	distance(float ax, float ay, float bx, float by, float ang)
+{
+	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
+}
+
+void	cub_draw_rays_3D(t_data *data)
+{
+	int		r;
+	int		ray;
+	int		depth_of_field;
+	int		x_offset;
+	int		y_offset;
+	int		map_x;
+	int		map_y;
+	int		map;
+	float	arc_tan;
+	float	nTan;
+	float	ray_x;
+	float	ray_y;
+	float	px;
+	float	py;
+	float	pdx;
+	float	pdy;
+	float	disH;
+	float	disV;
+	float	hx;
+	float	vx;
+	float	hy;
+	float	vy;
+
+	map = data->map.tab;
+	px = data->player.x;
+	py = data->player.y;
+	r = 0;
+	ray = data->player.dir;
+	while (r < 1)
+	{
+		// Horizontal
+		depth_of_field = 0;
+		disH = 1000000;
+		hx = px;
+		hy = py;
+		arc_tan = -1 / tan(ray);
+		if (ray > PI)
+		{
+			ray_y = (((int)py >> 6) << 6) - 0.0001;
+			ray_x = (py - ray_y) * arc_tan + px;
+			y_offset = -64;
+			x_offset = -y_offset * arc_tan;
+		}
+		else if (ray < PI)
+		{
+			ray_y = (((int)py >> 6) << 6) + 64;
+			ray_x = (py - ray_y) * arc_tan + px;
+			y_offset = 64;
+			x_offset = -y_offset * arc_tan;
+		}
+		else if (ray == 0 || ray == PI)
+		{
+			ray_x = px;
+			ray_y = py;
+			depth_of_field = 8;
+		}
+		while (depth_of_field < 8)
+		{
+			map_x = (int)(ray_x) >> 6;
+			map_y = (int)(ray_x) >> 6;
+			mp = map_y * data->map.x + map_x;
+			if ((map_x > 0 || map_y > 0) &&
+				map_y * data->map.x + map_x < data->map.x * data->map.y &&
+				data->map.tab[map_y][map_x] == 1)
+			{
+				hx = rx;
+				hy = ry;
+				disH = distance(px, py, hx, hy, ra);
+				depth_of_field = 8;
+			}
+			else
+			{
+				ray_x += x_offset;
+				ray_y += y_offset;
+				depth_of_field += 1;
+			}
+		}
+		// Vertical
+		depth_of_field = 0;
+		disV = 1000000;
+		vx = px;
+		vy = py;
+		nTan = -tan(ray);
+		if (ray > PI2 && ray < PI3)
+		{
+			ray_x = (((int)px >> 6) << 6) - 0.0001;
+			ray_y = (px - ray_x) * nTan + py;
+			x_offset = -64;
+			y_offset = -x_offset * nTan;
+		}
+		else if (ray < PI2 || ray > PI3)
+		{
+			ray_x = (((int)px >> 6) << 6) + 64;
+			ray_y = (px - ray_x) * nTan + py;
+			x_offset = 64;
+			y_offset = -x_offset * nTan;
+		}
+		else if (ray == 0 || ray == PI)
+		{
+			ray_x = px;
+			ray_y = py;
+			depth_of_field = 8;
+		}
+		while (depth_of_field < 8)
+		{
+			map_x = (int)(ray_x) >> 6;
+			map_y = (int)(ray_x) >> 6;
+			if ((map_x > 0 || map_y > 0) &&
+				map_y * data->map.x + map_x < data->map.x * data->map.y &&
+				data->map.tab[map_y][map_x] == 1)
+			{
+				vx = rx;
+				vy = ry;
+				disV = distance(px, py, vx, vy, ra);
+				depth_of_field = 8;
+			}
+			else
+			{
+				ray_x += x_offset;
+				ray_y += y_offset;
+				depth_of_field += 1;
+			}
+		}
+		if (disV < disH)
+		{
+			rx = vx;
+			ry = vy;
+		}
+		else if (disH < disV)
+		{
+			rx = hx;
+			ry = hy;
+		}
+		r++;
+	}
+}
+
+int		cub_render_next_frame(t_data *data)
 {
 }
 
@@ -37,7 +181,7 @@ void	cub_start(t_data *data)
 								&img.endian);
 	cub_pixel_put(&img, 5, 5, 0x00FF0000);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-	mlx_loop_hook(mlx, render_next_frame, data);
+	mlx_loop_hook(mlx, cub_render_next_frame, data);
 	mlx_loop(mlx);
 }
 
