@@ -16,16 +16,20 @@ void	cub_pixel_put(t_img img, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = img->addr + (y * data->line_length + x * (img->bits_per_pixel / 8));
+	dst = img->addr + (y * g->line_length + x * (img->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
 
-float	distance(float ax, float ay, float bx, float by, float ang)
+float	cub_dist(float ax, float ay, float bx, float by, float ang)
 {
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
 }
 
-void	cub_draw_rays_3D(t_data *data)
+void	cub_draw(t_g *g)
+{
+}
+
+void	cub_raycaster(t_g *g)
 {
 	int		r;
 	int		ray;
@@ -36,7 +40,7 @@ void	cub_draw_rays_3D(t_data *data)
 	int		map_y;
 	int		map;
 	float	arc_tan;
-	float	nTan;
+	float	not_tan;
 	float	ray_x;
 	float	ray_y;
 	float	px;
@@ -49,13 +53,17 @@ void	cub_draw_rays_3D(t_data *data)
 	float	vx;
 	float	hy;
 	float	vy;
+	float	dist;
+	float	lineH;
 
-	map = data->map.tab;
-	px = data->player.x;
-	py = data->player.y;
+	map = g->map.tab;
+	px = g->player.x;
+	py = g->player.y;
 	r = 0;
-	ray = data->player.dir;
-	while (r < 1)
+	ray = g->player.dir - DR * 30;
+	ray = ray < 0 ? ray + 2 * PI : ray;
+	ray = ray > 2 * PI ? ray - 2 * PI : ray;
+	while (r < 60)
 	{
 		// Horizontal
 		depth_of_field = 0;
@@ -87,14 +95,14 @@ void	cub_draw_rays_3D(t_data *data)
 		{
 			map_x = (int)(ray_x) >> 6;
 			map_y = (int)(ray_x) >> 6;
-			mp = map_y * data->map.x + map_x;
+			mp = map_y * g->map.x + map_x;
 			if ((map_x > 0 || map_y > 0) &&
-				map_y * data->map.x + map_x < data->map.x * data->map.y &&
-				data->map.tab[map_y][map_x] == 1)
+				map_y * g->map.x + map_x < g->map.x * g->map.y &&
+				g->map.tab[map_y][map_x] == 1)
 			{
 				hx = rx;
 				hy = ry;
-				disH = distance(px, py, hx, hy, ra);
+				disH = cub_dist(px, py, hx, hy, ra);
 				depth_of_field = 8;
 			}
 			else
@@ -109,20 +117,20 @@ void	cub_draw_rays_3D(t_data *data)
 		disV = 1000000;
 		vx = px;
 		vy = py;
-		nTan = -tan(ray);
+		not_tan = -tan(ray);
 		if (ray > PI2 && ray < PI3)
 		{
 			ray_x = (((int)px >> 6) << 6) - 0.0001;
-			ray_y = (px - ray_x) * nTan + py;
+			ray_y = (px - ray_x) * not_tan + py;
 			x_offset = -64;
-			y_offset = -x_offset * nTan;
+			y_offset = -x_offset * not_tan;
 		}
 		else if (ray < PI2 || ray > PI3)
 		{
 			ray_x = (((int)px >> 6) << 6) + 64;
-			ray_y = (px - ray_x) * nTan + py;
+			ray_y = (px - ray_x) * not_tan + py;
 			x_offset = 64;
-			y_offset = -x_offset * nTan;
+			y_offset = -x_offset * not_tan;
 		}
 		else if (ray == 0 || ray == PI)
 		{
@@ -135,12 +143,12 @@ void	cub_draw_rays_3D(t_data *data)
 			map_x = (int)(ray_x) >> 6;
 			map_y = (int)(ray_x) >> 6;
 			if ((map_x > 0 || map_y > 0) &&
-				map_y * data->map.x + map_x < data->map.x * data->map.y &&
-				data->map.tab[map_y][map_x] == 1)
+				map_y * g->map.x + map_x < g->map.x * g->map.y &&
+				g->map.tab[map_y][map_x] == 1)
 			{
 				vx = rx;
 				vy = ry;
-				disV = distance(px, py, vx, vy, ra);
+				disV = cub_dist(px, py, vx, vy, ra);
 				depth_of_field = 8;
 			}
 			else
@@ -154,72 +162,129 @@ void	cub_draw_rays_3D(t_data *data)
 		{
 			rx = vx;
 			ry = vy;
+			dist = disV;
 		}
 		else if (disH < disV)
 		{
 			rx = hx;
 			ry = hy;
+			dist = disH;
 		}
+		float ca = g->player.dir - ray;
+		ca = ca < 0 ? ca + 2 * PI : ca;
+		ca = ca > 2 * PI ? ca - 2 * PI : ca;
+		dist = dist * cos(ca); // fix fisheye
+		lineH = (mapS * 320) / dist;
+		lineH = lineH > 320 ? 320 : lineH;
+		float lineO = 160 - lineH / 2; // line offset
+		cub_draw(r * 8, lineO);
+		cub_draw(r * 8, lineO + lineH);
+		ray += DR;
+		ray = ray < 0 ? ray + 2 * PI : ray;
+		ray = ray > 2 * PI ? ray - 2 * PI : ray;
 		r++;
 	}
 }
 
-int		cub_render_next_frame(t_data *data)
+int		cub_render_next_frame(t_g *g)
 {
+	cub_raycaster(g);
 }
 
-void	cub_start(t_data *data)
+void	cub_rotate(t_g *g, double dir)
 {
-	void *mlx;
-	void *mlx_win;
-	t_img img;
+	g->player.dir += dir * R_SPD;
+	while (g->player.dir < 0)
+		g->player.dir += 2 * PI;
+	while (g->player.dir > 2 * PI)
+		g->player.dir -= 2 * PI;
+}
 
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, 1920, 1080, "Hello world!");
-	img.img = mlx_new_image(mlx, 1920, 1080);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-								&img.endian);
-	cub_pixel_put(&img, 5, 5, 0x00FF0000);
+void	cub_move(t_g *g, double dir)
+{
+	g->player.y -= dir * sin(g->player.dir) * SPEED;
+	g->player.x += dir * cos(g->player.dir) * SPEED;
+}
+
+void	cub_strafe(t_g *g, double c)
+{
+	g->player.y += dir * cos(g->player.dir) * SPEED;
+	g->player.x += dir * sin(g->player.dir) * SPEED;
+}
+
+int		cub_key(int key, t_g *g)
+{
+	if (key == ESC)
+		cub_close(g, 1);
+	else if (key == W)
+		cub_move(g, 1);
+	else if (key == A)
+		cub_strafe(g, -1);
+	else if (key == S)
+		cub_move(g, -1);
+	else if (key == D)
+		cub_strafe(g, 1);
+	else if (key == LEFT)
+		cub_rotate(g, -1);
+	else if (key == RIGHT)
+		cub_rotate(g, 1);
+	cub_render_next_frame(g);
+	return (1);
+}
+
+int		cub_start(t_g *g, int bmp)
+{
+	g->mlx.ptr = mlx_init();
+	if (bmp == 1)
+		return (cub_bitmap(&g));
+	g->win.ptr = mlx_new_window(g->mlx.ptr, g->win.x, g->win.y, "cub3D");
+	g->img.img = mlx_new_image(g->mlx, 1920, 1080);
+	g->img.addr = mlx_get_g_addr(g->img.img, &g->img.bits_per_pixel,
+					&g->img.line_length, &g->img.endian);
+	cub_pixel_put(&g->img, 5, 5, 0x00FF0000);
+	ft_draw(&g);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-	mlx_loop_hook(mlx, cub_render_next_frame, data);
+	mlx_hook(mlx_win, 02, 0L, cub_key, g);
+	mlx_hook(mlx_win, 17, 0L, cub_close, g);
 	mlx_loop(mlx);
+	return (1);
 }
 
-char	*cub_make_str(t_data *data, int i)
+char	*cub_make_str(t_g *g, int i)
 {
 	char *s;
 	int j;
 
-	if (!(s = malloc(data->map.x + 1)))
+	if (!(s = malloc(g->map.x + 1)))
 		return (NULL);
 	j = 0;
-	while (data->map.tab[i][j])
+	while (g->map.tab[i][j])
 	{
-		s[j] = data->map.tab[i][j];
+		s[j] = g->map.tab[i][j];
 		j++;
 	}
-	while (j < data->map.x)
+	while (j < g->map.x)
 	{
 		s[j] = ' ';
 		j++;
 	}
-	s[data->map.x] = 0;
+	s[g->map.x] = 0;
 }
 
-int		cub_make_sqr_map(t_data *data)
+int		cub_make_sqr_map(t_g *g)
 {
 	int		i;
 	char	*temp;
 
 	i = 0;
-	while (data->map.tab[i])
+	while (g->map.tab[i])
 	{
-		if (ft_strlen(data->map.tab[i]) != data->map.x)
+		if (ft_strlen(g->map.tab[i]) != g->map.x)
 		{
-			temp = data->map.tab[i];
-			if (!(data->map.tab[i] = cub_make_str(data, i)))
+			temp = g->map.tab[i];
+			if (!(g->map.tab[i] = cub_make_str(g, i)))
 			{
-				data->map.tab[i] = temp;
+				g->map.tab[i] = temp;
 				return (0);
 			}
 			free(temp);
@@ -229,48 +294,48 @@ int		cub_make_sqr_map(t_data *data)
 	return (1);
 }
 
-void	cub_set_dir(t_data *data, char c)
+void	cub_set_dir(t_g *g, char c)
 {
 	if (c == 'E')
 	{
-		data->player.chr = 'E';
-		data->player.dir = 0;
+		g->player.chr = 'E';
+		g->player.dir = 0;
 	}
 	else if (c == 'N')
 	{
-		data->player.chr = 'N';
-		data->player.dir = 0.5;
+		g->player.chr = 'N';
+		g->player.dir = 0.5;
 	}
 	else if (c == 'W')
 	{
-		data->player.chr = 'W';
-		data->player.dir = 1;
+		g->player.chr = 'W';
+		g->player.dir = 1;
 	}
 	else if (c == 'S')
 	{
-		data->player.chr = 'S';
-		data->player.dir = 1.5;
+		g->player.chr = 'S';
+		g->player.dir = 1.5;
 	}
 }
 
-int		cub_set_player(t_data *data)
+int		cub_set_player(t_g *g)
 {
 	int i;
 	int j;
 
 	i = 0;
-	while (data->map.tab[i])
+	while (g->map.tab[i])
 	{
 		j = 0;
-		while (data->map.tab[i][j])
+		while (g->map.tab[i][j])
 		{
-			if (ft_strchr("NSWE", data->map.tab[i][j]))
+			if (ft_strchr("NSWE", g->map.tab[i][j]))
 			{
-				if (data->player.chr)
+				if (g->player.chr)
 					return (0);
-				data->player.x = j;
-				data->player.y = i;
-				cub_set_dir(data, data->map.tab[i][j]);
+				g->player.x = j;
+				g->player.y = i;
+				cub_set_dir(g, g->map.tab[i][j]);
 			}
 			j++;
 		}
@@ -279,27 +344,27 @@ int		cub_set_player(t_data *data)
 	return (1);
 }
 
-int		cub_check_map(t_data *data)
+int		cub_check_map(t_g *g)
 {
 	int i;
 	int j;
 
 	i = -1;
-	while (data->map.tab[++i])
+	while (g->map.tab[++i])
 	{
 		j = -1;
-		while (data->map.tab[i][++j])
+		while (g->map.tab[i][++j])
 		{
-			if (data->map.tab[i][j] == ' ')
+			if (g->map.tab[i][j] == ' ')
 			{
-				if ((j > 0 && (data->map.tab[i][j - 1] != ' ' ||
-				data->map.tab[i][j - 1] != '1')) ||
-				(data->map.tab[i][j + 1] != ' ' ||	data->map.tab[i][j + 1] != 0
-				|| data->map.tab[i][j + 1] != '1') || (data->map.tab[i + 1] &&
-				(data->map.tab[i + 1][j] != '1' ||
-				data->map.tab[i + 1][j] != ' ')) || i > 0 &&
-				(data->map.tab[i - 1][j] != '1' ||
-				data->map.tab[i - 1][j] != ' ')))
+				if ((j > 0 && (g->map.tab[i][j - 1] != ' ' ||
+				g->map.tab[i][j - 1] != '1')) ||
+				(g->map.tab[i][j + 1] != ' ' ||	g->map.tab[i][j + 1] != 0
+				|| g->map.tab[i][j + 1] != '1') || (g->map.tab[i + 1] &&
+				(g->map.tab[i + 1][j] != '1' ||
+				g->map.tab[i + 1][j] != ' ')) || i > 0 &&
+				(g->map.tab[i - 1][j] != '1' ||
+				g->map.tab[i - 1][j] != ' ')))
 					return (0);
 			}
 		}
@@ -307,26 +372,26 @@ int		cub_check_map(t_data *data)
 	return (1);
 }
 
-void	cub_init(char *cub)
+void	cub_init(char *cub, int bmp)
 {
-	t_data		data;
+	t_g		g;
 
-	ft_bzero(&data, sizeof(data));
-	data.texture.ceiling = NONE;
-	data.texture.floor = NONE;
-	cub_parse(cub, &data);
-	cub_make_sqr_map(&data);
-	cub_set_player(&data);
-	cub_check_map(&data);
-	cub_start(&data);
+	ft_bzero(&g, sizeof(g));
+	g.text.ceiling = NONE;
+	g.text.floor = NONE;
+	cub_parse(cub, &g);
+	cub_make_sqr_map(&g);
+	cub_set_player(&g);
+	cub_check_map(&g);
+	cub_start(&g);
 }
 
 int		main(int ac, char **av)
 {
 	if (ac == 3 && ft_strcmp(av[2], "--save"))
-		cub_init(av[1]);
+		cub_init(av[1], 1);
 	else if (ac == 2)
-		cub_init(av[1]);
+		cub_init(av[1], 0);
 	else
 		write(2, "Error : Invalid arguments\n", 26);
 	return (0);

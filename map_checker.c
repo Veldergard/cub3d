@@ -12,42 +12,42 @@
 
 #include "cub3d.h"
 
-char	*cub_make_str(t_data *data, int i)
+char	*cub_make_str(t_g *g, int i)
 {
 	char *s;
 	int j;
 
-	if (!(s = malloc(data->map.x + 1)))
+	if (!(s = malloc(g->map.x + 1)))
 		return (NULL);
 	j = 0;
-	while (data->map.tab[i][j])
+	while (g->map.tab[i][j])
 	{
-		s[j] = data->map.tab[i][j];
+		s[j] = g->map.tab[i][j];
 		j++;
 	}
-	while (j < data->map.x)
+	while (j < g->map.x)
 	{
 		s[j] = ' ';
 		j++;
 	}
-	s[data->map.x] = 0;
+	s[g->map.x] = 0;
 	return (s);
 }
 
-int		cub_make_sqr_map(t_data *data)
+int		cub_make_sqr_map(t_g *g)
 {
 	int		i;
 	char	*temp;
 
 	i = 0;
-	while (data->map.tab[i])
+	while (g->map.tab[i])
 	{
-		if ((int)ft_strlen(data->map.tab[i]) != data->map.x)
+		if ((int)ft_strlen(g->map.tab[i]) != g->map.x)
 		{
-			temp = data->map.tab[i];
-			if (!(data->map.tab[i] = cub_make_str(data, i)))
+			temp = g->map.tab[i];
+			if (!(g->map.tab[i] = cub_make_str(g, i)))
 			{
-				data->map.tab[i] = temp;
+				g->map.tab[i] = temp;
 				return (0);
 			}
 			free(temp);
@@ -57,48 +57,48 @@ int		cub_make_sqr_map(t_data *data)
 	return (1);
 }
 
-void	cub_set_dir(t_data *data, char c)
+void	cub_set_dir(t_g *g, char c)
 {
 	if (c == 'E')
 	{
-		data->player.chr = 'E';
-		data->player.dir = 0;
+		g->player.chr = 'E';
+		g->player.dir = 0;
 	}
 	else if (c == 'N')
 	{
-		data->player.chr = 'N';
-		data->player.dir = 0.5;
+		g->player.chr = 'N';
+		g->player.dir = 0.5;
 	}
 	else if (c == 'W')
 	{
-		data->player.chr = 'W';
-		data->player.dir = 1;
+		g->player.chr = 'W';
+		g->player.dir = 1;
 	}
 	else if (c == 'S')
 	{
-		data->player.chr = 'S';
-		data->player.dir = 1.5;
+		g->player.chr = 'S';
+		g->player.dir = 1.5;
 	}
 }
 
-int		cub_set_player(t_data *data)
+int		cub_set_player(t_g *g)
 {
 	int i;
 	int j;
 
 	i = 0;
-	while (data->map.tab[i])
+	while (g->map.tab[i])
 	{
 		j = 0;
-		while (data->map.tab[i][j])
+		while (g->map.tab[i][j])
 		{
-			if (ft_strchr("NSWE", data->map.tab[i][j]))
+			if (ft_strchr("NSWE", g->map.tab[i][j]))
 			{
-				if (data->player.chr)
+				if (g->player.chr)
 					return (0);
-				data->player.x = j + 0.5;
-				data->player.y = i + 0.5;
-				cub_set_dir(data, data->map.tab[i][j]);
+				g->player.x = j + 0.5;
+				g->player.y = i + 0.5;
+				cub_set_dir(g, g->map.tab[i][j]);
 			}
 			j++;
 		}
@@ -107,27 +107,27 @@ int		cub_set_player(t_data *data)
 	return (1);
 }
 
-int		cub_check_map(t_data *data)
+int		cub_check_map(t_g *g)
 {
 	int i;
 	int j;
 
 	i = -1;
-	while (data->map.tab[++i])
+	while (g->map.tab[++i])
 	{
 		j = -1;
-		while (data->map.tab[i][++j])
+		while (g->map.tab[i][++j])
 		{
-			if (data->map.tab[i][j] == ' ')
+			if (g->map.tab[i][j] == ' ')
 			{
-				if ((j > 0 && (data->map.tab[i][j - 1] != ' ' ||
-				data->map.tab[i][j - 1] != '1')) ||
-				(data->map.tab[i][j + 1] != ' ' ||	data->map.tab[i][j + 1] != 0
-				|| data->map.tab[i][j + 1] != '1') || (data->map.tab[i + 1] &&
-				(data->map.tab[i + 1][j] != '1' ||
-				data->map.tab[i + 1][j] != ' ')) || (i > 0 &&
-				(data->map.tab[i - 1][j] != '1' ||
-				data->map.tab[i - 1][j] != ' ')))
+				if ((j > 0 && (g->map.tab[i][j - 1] != ' ' ||
+				g->map.tab[i][j - 1] != '1')) ||
+				(g->map.tab[i][j + 1] != ' ' ||	g->map.tab[i][j + 1] != 0
+				|| g->map.tab[i][j + 1] != '1') || (g->map.tab[i + 1] &&
+				(g->map.tab[i + 1][j] != '1' ||
+				g->map.tab[i + 1][j] != ' ')) || (i > 0 &&
+				(g->map.tab[i - 1][j] != '1' ||
+				g->map.tab[i - 1][j] != ' ')))
 					return (0);
 			}
 		}

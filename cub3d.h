@@ -27,6 +27,17 @@
 # define PI 3.14159265359
 # define PI2 PI / 2
 # define PI3 3 * PI / 2
+# define DR 0.0174533
+
+# define ESC 53
+# define W 13
+# define A 0
+# define S 1
+# define D 2
+# define UP 126
+# define DOWN 125
+# define LEFT 123
+# define RIGHT 124
 
 typedef struct		s_rect
 {
@@ -63,7 +74,7 @@ typedef struct		s_map
 	int				y;
 }					t_map;
 
-typedef struct		s_texture
+typedef struct		s_text
 {
 	unsigned int	*n; // north
 	unsigned int	*s; // south
@@ -72,32 +83,32 @@ typedef struct		s_texture
 	unsigned int	*sp; //sprite
 	unsigned int	floor; //floor color
 	unsigned int	ceiling; // ceiling color
-}					t_texture;
+}					t_text;
 
-typedef struct		s_window
+typedef struct		s_win
 {
 	int				x; // width of window
 	int				y; // height of window
 	void			*ptr;
-}					t_window;
+}					t_win;
 
-typedef struct		s_data
+typedef struct		s_g
 {
-	t_window		win;
-	t_texture		texture;
+	t_win			win;
+	t_text			text;
 	int				error; // error code
 	t_map			map;
 	t_player		player;
 	t_mlx			mlx;
 	t_img			img;
 	t_rect			rect;
-}					t_data;
+}					t_g;
 
-int					cub_parse(char *file, t_data *data);
-char				*cub_make_str(t_data *data, int i);
-int					cub_make_sqr_map(t_data *data);
-void				cub_set_dir(t_data *data, char c);
-int					cub_set_player(t_data *data);
-int					cub_check_map(t_data *data);
+int					cub_parse(char *file, t_g *g);
+char				*cub_make_str(t_g *g, int i);
+int					cub_make_sqr_map(t_g *g);
+void				cub_set_dir(t_g *g, char c);
+int					cub_set_player(t_g *g);
+int					cub_check_map(t_g *g);
 
 #endif

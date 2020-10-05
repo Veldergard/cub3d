@@ -19,20 +19,20 @@ int		skip_spaces(char *line, int *i)
 	return (1);
 }
 
-int		parse_resolution(t_data *data, char *line, int *i)
+int		parse_resolution(t_g *g, char *line, int *i)
 {
-	if (data->win.x != 0 || data->win.y != 0)
+	if (g->win.x != 0 || g->win.y != 0)
 		return (-3);
 	(*i)++;
-	data->win.x = ft_atoi_i(line, i);
-	data->win.y = ft_atoi_i(line, i);
-	if (data->win.x > 1920)
-		data->win.x = 1920;
-	if (data->win.y > 1080)
-		data->win.y = 1080;
+	g->win.x = ft_atoi_i(line, i);
+	g->win.y = ft_atoi_i(line, i);
+	if (g->win.x > 1920)
+		g->win.x = 1920;
+	if (g->win.y > 1080)
+		g->win.y = 1080;
 	(*i) += ft_num_len(line);
 	skip_spaces(line, i);
-	if (data->win.x <= 0 || data->win.y <= 0 || line[*i])
+	if (g->win.x <= 0 || g->win.y <= 0 || line[*i])
 		return (-4);
 	return (0);
 }
@@ -71,7 +71,7 @@ int		check_ending(char *file, char *ext)
 	return (0);
 }
 
-int		cub_xpm(t_data *data, unsigned int **adr, char *file)
+int		cub_xpm(t_g *g, unsigned int **adr, char *file)
 {
 	int		fd;
 	void	*img;
@@ -83,15 +83,15 @@ int		cub_xpm(t_data *data, unsigned int **adr, char *file)
 	if ((fd = open(file, O_RDONLY)) == -1 || errno)
 		return (-1);
 	close(fd);
-	img = mlx_xpm_file_to_image(data->mlx.ptr, file, &tab[0], &tab[1]);
+	img = mlx_xpm_file_to_image(g->mlx.ptr, file, &tab[0], &tab[1]);
 	if (img == NULL || tab[0] != 64 || tab[1] != 64)
 		return (-1);
-	*adr = (unsigned int *)mlx_get_data_addr(img, &tab[2], &tab[3], &tab[4]);
+	*adr = (unsigned int *)mlx_get_g_addr(img, &tab[2], &tab[3], &tab[4]);
 	free(img);
 	return (0);
 }
 
-int		parse_texture(t_data *data, unsigned int **adr, char *line, int *i)
+int		parse_texture(t_g *g, unsigned int **adr, char *line, int *i)
 {
 	char	*file;
 	int		j;
@@ -109,7 +109,7 @@ int		parse_texture(t_data *data, unsigned int **adr, char *line, int *i)
 	while (line[*i] != ' ' && line[*i] != '\0')
 		file[j++] = line[(*i)++];
 	file[j] = '\0';
-	j = cub_xpm(data, adr, file);
+	j = cub_xpm(g, adr, file);
 	free(file);
 	return (j == -1 ? -9 : 0);
 }
@@ -131,7 +131,7 @@ int		cub_slablen(char *line)
 	return (count);
 }
 
-char	*cub_slab(t_data *data, char *line, int *i)
+char	*cub_slab(t_g *g, char *line, int *i)
 {
 	char	*slab;
 	int		j;
@@ -153,37 +153,37 @@ char	*cub_slab(t_data *data, char *line, int *i)
 		}
 		(*i)++;
 	}
-	if (j > data->map.x)
-		data->map.x = j;
+	if (j > g->map.x)
+		g->map.x = j;
 	slab[j] = '\0';
 	return (slab);
 }
 
-int		parse_map(t_data *data, char *line, int *i)
+int		parse_map(t_g *g, char *line, int *i)
 {
 	char	**tmp;
 	int		j;
 
-	data->error = 1;
-	if (!(tmp = malloc(sizeof(char*) * (data->map.y + 2))))
+	g->error = 1;
+	if (!(tmp = malloc(sizeof(char*) * (g->map.y + 2))))
 		return (-11);
 	j = -1;
-	while (++j < data->map.y)
-		tmp[j] = data->map.tab[j];
-	if ((tmp[data->map.y] = cub_slab(data, line, i)) == NULL)
+	while (++j < g->map.y)
+		tmp[j] = g->map.tab[j];
+	if ((tmp[g->map.y] = cub_slab(g, line, i)) == NULL)
 	{
 		free(tmp);
 		return (-12);
 	}
-	tmp[data->map.y + 1] = NULL;
-	if (data->map.y > 0)
-		free(data->map.tab);
-	data->map.tab = tmp;
-	data->map.y++;
+	tmp[g->map.y + 1] = NULL;
+	if (g->map.y > 0)
+		free(g->map.tab);
+	g->map.tab = tmp;
+	g->map.y++;
 	return (0);
 }
 
-static int		parse_line(t_data *data, char *line)
+static int		parse_line(t_g *g, char *line)
 {
 	int i;
 
@@ -192,29 +192,29 @@ static int		parse_line(t_data *data, char *line)
 	if (!line || !*line)
 		return (0);
 	if (line[i] == '1')
-		data->error = parse_map(data, line, &i);
+		g->error = parse_map(g, line, &i);
 	else if (line[i] == 'R' && line[i + 1] == ' ')
-		data->error = parse_resolution(data, line, &i);
+		g->error = parse_resolution(g, line, &i);
 	else if (line[i] == 'N' && line[i + 1] == 'O' && line[i + 2] == ' ')
-		data->error = parse_texture(data, &(data->texture.n), line, &i);
+		g->error = parse_texture(g, &(g->texture.n), line, &i);
 	else if (line[i] == 'S' && line[i + 1] == 'O' && line[i + 2] == ' ')
-		data->error = parse_texture(data, &(data->texture.s), line, &i);
+		g->error = parse_texture(g, &(g->texture.s), line, &i);
 	else if (line[i] == 'W' && line[i + 1] == 'E' && line[i + 2] == ' ')
-		data->error = parse_texture(data, &(data->texture.w), line, &i);
+		g->error = parse_texture(g, &(g->texture.w), line, &i);
 	else if (line[i] == 'E' && line[i + 1] == 'A' && line[i + 2] == ' ')
-		data->error = parse_texture(data, &(data->texture.e), line, &i);
+		g->error = parse_texture(g, &(g->texture.e), line, &i);
 	else if (line[i] == 'S' && line[i + 1] == ' ')
-		data->error = parse_texture(data, &(data->texture.sp), line, &i);
+		g->error = parse_texture(g, &(g->texture.sp), line, &i);
 	else if (line[i] == 'F' && line[i + 1] == ' ')
-		data->error = parse_color(&(data->texture.floor), line, &i);
+		g->error = parse_color(&(g->texture.floor), line, &i);
 	else if (line[i] == 'C' && line[i + 1] == ' ')
-		data->error = parse_color(&(data->texture.ceiling), line, &i);
-	if (skip_spaces(line, &i) && data->error == 0 && line[i] != '\0')
-		data->error = -10;
-	return (data->error < 0 ? -1 : 0);
+		g->error = parse_color(&(g->texture.ceiling), line, &i);
+	if (skip_spaces(line, &i) && g->error == 0 && line[i] != '\0')
+		g->error = -10;
+	return (g->error < 0 ? -1 : 0);
 }
 
-int				cub_parse(char *file, t_data *data)
+int				cub_parse(char *file, t_g *g)
 {
 	char	*line;
 	int		fd;
@@ -228,7 +228,7 @@ int				cub_parse(char *file, t_data *data)
 	while (r == 1)
 	{
 		r = get_next_line(fd, &line);
-		if (r == 1 && parse_line(data, line) == -1)
+		if (r == 1 && parse_line(g, line) == -1)
 			r = -2;
 		free(line);
 	}
