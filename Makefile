@@ -6,11 +6,11 @@
 #    By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/21 22:59:15 by olaurine          #+#    #+#              #
-#    Updated: 2020/09/10 19:59:24 by olaurine         ###   ########.fr        #
+#    Updated: 2020/10/05 23:37:49 by olaurine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = cub3d
+NAME = cub3D
 SRC = main.c cub_parser.c map_checker.c
 OBJ = $(patsubst %.c,%.o,$(SRC))
 LIBFT = libft

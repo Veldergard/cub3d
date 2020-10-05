@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/09/10 20:15:15 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/06 00:29:39 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,31 @@
 # define PI2 PI / 2
 # define PI3 3 * PI / 2
 # define DR 0.0174533
+# define SPEED 1
+# define R_SPD 0.1
 
-# define ESC 53
-# define W 13
-# define A 0
-# define S 1
-# define D 2
-# define UP 126
-# define DOWN 125
-# define LEFT 123
-# define RIGHT 124
 
-typedef struct		s_rect
-{
-	int				x;
-	int				y;
-}					t_rect;
+# ifdef __APPLE__
 
-typedef struct		s_mlx
-{
-	void			*ptr;
-}					t_mlx;
+#  define A		0x0
+#  define D		0x2
+#  define S		0x1
+#  define W		0xD
+#  define ESC	0x35
+#  define LEFT	0x7B
+#  define RIGHT	0x7C
+
+# else
+
+#  define A		0x61
+#  define D		0x64
+#  define S		0x73
+#  define W		0x77
+#  define ESC		0xff1b
+#  define LEFT	0xff51
+#  define RIGHT	0xff53
+
+# endif
 
 typedef struct		s_player
 {
@@ -99,9 +103,8 @@ typedef struct		s_g
 	int				error; // error code
 	t_map			map;
 	t_player		player;
-	t_mlx			mlx;
+	void			*mlx;
 	t_img			img;
-	t_rect			rect;
 }					t_g;
 
 int					cub_parse(char *file, t_g *g);

@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/09/10 20:00:31 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/05 23:25:30 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,10 @@ int		cub_xpm(t_g *g, unsigned int **adr, char *file)
 	if ((fd = open(file, O_RDONLY)) == -1 || errno)
 		return (-1);
 	close(fd);
-	img = mlx_xpm_file_to_image(g->mlx.ptr, file, &tab[0], &tab[1]);
+	img = mlx_xpm_file_to_image(g->mlx, file, &tab[0], &tab[1]);
 	if (img == NULL || tab[0] != 64 || tab[1] != 64)
 		return (-1);
-	*adr = (unsigned int *)mlx_get_g_addr(img, &tab[2], &tab[3], &tab[4]);
+	*adr = (unsigned int *)mlx_get_data_addr(img, &tab[2], &tab[3], &tab[4]);
 	free(img);
 	return (0);
 }
@@ -196,19 +196,19 @@ static int		parse_line(t_g *g, char *line)
 	else if (line[i] == 'R' && line[i + 1] == ' ')
 		g->error = parse_resolution(g, line, &i);
 	else if (line[i] == 'N' && line[i + 1] == 'O' && line[i + 2] == ' ')
-		g->error = parse_texture(g, &(g->texture.n), line, &i);
+		g->error = parse_texture(g, &(g->text.n), line, &i);
 	else if (line[i] == 'S' && line[i + 1] == 'O' && line[i + 2] == ' ')
-		g->error = parse_texture(g, &(g->texture.s), line, &i);
+		g->error = parse_texture(g, &(g->text.s), line, &i);
 	else if (line[i] == 'W' && line[i + 1] == 'E' && line[i + 2] == ' ')
-		g->error = parse_texture(g, &(g->texture.w), line, &i);
+		g->error = parse_texture(g, &(g->text.w), line, &i);
 	else if (line[i] == 'E' && line[i + 1] == 'A' && line[i + 2] == ' ')
-		g->error = parse_texture(g, &(g->texture.e), line, &i);
+		g->error = parse_texture(g, &(g->text.e), line, &i);
 	else if (line[i] == 'S' && line[i + 1] == ' ')
-		g->error = parse_texture(g, &(g->texture.sp), line, &i);
+		g->error = parse_texture(g, &(g->text.sp), line, &i);
 	else if (line[i] == 'F' && line[i + 1] == ' ')
-		g->error = parse_color(&(g->texture.floor), line, &i);
+		g->error = parse_color(&(g->text.floor), line, &i);
 	else if (line[i] == 'C' && line[i + 1] == ' ')
-		g->error = parse_color(&(g->texture.ceiling), line, &i);
+		g->error = parse_color(&(g->text.ceiling), line, &i);
 	if (skip_spaces(line, &i) && g->error == 0 && line[i] != '\0')
 		g->error = -10;
 	return (g->error < 0 ? -1 : 0);
