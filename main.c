@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/06 00:41:00 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/06 00:47:16 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,9 @@ void	cub_raycaster(t_g *g)
 		{
 			ray_x = px;
 			ray_y = py;
-			depth_of_field = 8;
+			depth_of_field = DOF;
 		}
-		while (depth_of_field < 8)
+		while (depth_of_field < DOF)
 		{
 			map_x = (int)(ray_x) >> 6;
 			map_y = (int)(ray_x) >> 6;
@@ -114,7 +114,7 @@ void	cub_raycaster(t_g *g)
 				hx = ray_x;
 				hy = ray_y;
 				disH = cub_dist(px, py, hx, hy);
-				depth_of_field = 8;
+				depth_of_field = DOF;
 			}
 			else
 			{
@@ -147,9 +147,9 @@ void	cub_raycaster(t_g *g)
 		{
 			ray_x = px;
 			ray_y = py;
-			depth_of_field = 8;
+			depth_of_field = DOF;
 		}
-		while (depth_of_field < 8)
+		while (depth_of_field < DOF)
 		{
 			map_x = (int)(ray_x) >> 6;
 			map_y = (int)(ray_x) >> 6;
@@ -160,7 +160,7 @@ void	cub_raycaster(t_g *g)
 				vx = ray_x;
 				vy = ray_y;
 				disV = cub_dist(px, py, vx, vy);
-				depth_of_field = 8;
+				depth_of_field = DOF;
 			}
 			else
 			{

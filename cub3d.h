@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/06 00:29:39 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/06 00:46:25 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define DR 0.0174533
 # define SPEED 1
 # define R_SPD 0.1
+# define DOF 64
 
 
 # ifdef __APPLE__
