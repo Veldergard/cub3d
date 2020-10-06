@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/06 21:41:52 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/06 21:47:24 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,12 +223,22 @@ void	cub_clear_scene(t_g *g)
 	int x;
 
 	y = 0;
+	while (y < (int)(g->win.y / 2))
+	{
+		x = 0;
+		while (x < g->win.x)
+		{
+			cub_pixel_put(g, x, y, 0x4287f5);
+			x++;
+		}
+		y++;
+	}
 	while (y < g->win.y)
 	{
 		x = 0;
 		while (x < g->win.x)
 		{
-			cub_pixel_put(g, x, y, 0x303030);
+			cub_pixel_put(g, x, y, 0xd742f5);
 			x++;
 		}
 		y++;
