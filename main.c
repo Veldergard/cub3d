@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/06 21:26:02 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/06 21:41:52 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,13 +201,13 @@ void	cub_rotate(t_g *g, double dir)
 
 void	cub_move(t_g *g, double dir)
 {
-	g->player.y -= dir * sin(g->player.dir) * SPEED;
+	g->player.y += dir * sin(g->player.dir) * SPEED;
 	g->player.x += dir * cos(g->player.dir) * SPEED;
 }
 
 void	cub_strafe(t_g *g, double dir)
 {
-	g->player.y += dir * cos(g->player.dir) * SPEED;
+	g->player.y -= dir * cos(g->player.dir) * SPEED;
 	g->player.x += dir * sin(g->player.dir) * SPEED;
 }
 
@@ -251,11 +251,11 @@ int		cub_key(int key, t_g *g)
 	else if (key == W)
 		cub_move(g, 1);
 	else if (key == A)
-		cub_strafe(g, -1);
+		cub_strafe(g, 1);
 	else if (key == S)
 		cub_move(g, -1);
 	else if (key == D)
-		cub_strafe(g, 1);
+		cub_strafe(g, -1);
 	else if (key == LEFT)
 		cub_rotate(g, -1);
 	else if (key == RIGHT)

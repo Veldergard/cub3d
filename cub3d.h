@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/06 21:17:17 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/06 21:41:47 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # define PI2 PI / 2
 # define PI3 3 * PI / 2
 # define DR 0.0174533
-# define SPEED 100
-# define R_SPD 0.1
+# define SPEED 10
+# define R_SPD 0.05
 # define DOF 64
 # define CUB_SIZE 64
 
