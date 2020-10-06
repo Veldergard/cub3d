@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/06 00:47:16 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/06 21:26:02 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,17 @@ float	cub_dist(float ax, float ay, float bx, float by)
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
 }
 
-int		cub_draw(t_g *g, int x, float lineO, float lineH)
+int		cub_draw_line(t_g *g, int x, float lineO, float lineH)
 {
-	int kek;
-	for (int i = 0; i < g->win.x / 60; i++)
-	{
-		kek = 0;
-		while (kek < lineO)
-			cub_pixel_put(g, x + i, kek++, 0x303030);
-		while (kek < lineH)
-			cub_pixel_put(g, x + i, kek++, 0x28d4b1);
-		while (kek < g->win.y)
-			cub_pixel_put(g, x + i, kek++, 0x303030);
-	}
-	mlx_put_image_to_window(g->mlx, g->win.ptr, g->img.img, 0, 0);
-	mlx_do_sync(g->mlx);
-	return (g->error);
+	int y;
+
+	y = lineO;
+	while (y < lineH && y > 0 && y < g->win.y)
+		cub_pixel_put(g, x, y++, 0x28d4b1);
+	return (1);
 }
 
-void	cub_raycaster(t_g *g)
+void	cub_draw_walls(t_g *g)
 {
 	int		r;
 	int		depth_of_field;
@@ -68,6 +60,7 @@ void	cub_raycaster(t_g *g)
 	float	lineH;
 	float	ca;
 	float	lineO;
+	float	step;
 
 	px = g->player.x;
 	py = g->player.y;
@@ -75,54 +68,9 @@ void	cub_raycaster(t_g *g)
 	ray = g->player.dir - DR * 30;
 	ray = ray < 0 ? ray + 2 * PI : ray;
 	ray = ray > 2 * PI ? ray - 2 * PI : ray;
-	while (r < 60)
+	step = 60. * DR / (float)g->win.x;
+	while (r < g->win.x)
 	{
-		// Horizontal
-		depth_of_field = 0;
-		disH = 1000000;
-		hx = px;
-		hy = py;
-		arc_tan = -1 / tan(ray);
-		if (ray > PI)
-		{
-			ray_y = (((int)py >> 6) << 6) - 0.0001;
-			ray_x = (py - ray_y) * arc_tan + px;
-			y_offset = -64;
-			x_offset = -y_offset * arc_tan;
-		}
-		else if (ray < PI)
-		{
-			ray_y = (((int)py >> 6) << 6) + 64;
-			ray_x = (py - ray_y) * arc_tan + px;
-			y_offset = 64;
-			x_offset = -y_offset * arc_tan;
-		}
-		else if (ray == 0 || ray == PI)
-		{
-			ray_x = px;
-			ray_y = py;
-			depth_of_field = DOF;
-		}
-		while (depth_of_field < DOF)
-		{
-			map_x = (int)(ray_x) >> 6;
-			map_y = (int)(ray_x) >> 6;
-			if ((map_x > 0 || map_y > 0) &&
-				map_y * g->map.x + map_x < g->map.x * g->map.y &&
-				g->map.tab[map_y][map_x] == 1)
-			{
-				hx = ray_x;
-				hy = ray_y;
-				disH = cub_dist(px, py, hx, hy);
-				depth_of_field = DOF;
-			}
-			else
-			{
-				ray_x += x_offset;
-				ray_y += y_offset;
-				depth_of_field += 1;
-			}
-		}
 		// Vertical
 		depth_of_field = 0;
 		disV = 1000000;
@@ -143,7 +91,7 @@ void	cub_raycaster(t_g *g)
 			x_offset = 64;
 			y_offset = -x_offset * not_tan;
 		}
-		else if (ray == 0 || ray == PI)
+		else
 		{
 			ray_x = px;
 			ray_y = py;
@@ -152,14 +100,60 @@ void	cub_raycaster(t_g *g)
 		while (depth_of_field < DOF)
 		{
 			map_x = (int)(ray_x) >> 6;
-			map_y = (int)(ray_x) >> 6;
-			if ((map_x > 0 || map_y > 0) &&
-				map_y * g->map.x + map_x < g->map.x * g->map.y &&
-				g->map.tab[map_y][map_x] == 1)
+			map_y = (int)(ray_y) >> 6;
+			if (map_x > 0 && map_y > 0 &&
+				map_y < g->map.y && map_x < g->map.x &&
+				g->map.tab[map_y][map_x] == '1')
 			{
 				vx = ray_x;
 				vy = ray_y;
 				disV = cub_dist(px, py, vx, vy);
+				depth_of_field = DOF;
+			}
+			else
+			{
+				ray_x += x_offset;
+				ray_y += y_offset;
+				depth_of_field += 1;
+			}
+		}
+		// Horizontal
+		depth_of_field = 0;
+		disH = 1000000;
+		hx = px;
+		hy = py;
+		arc_tan = -1 / tan(ray);
+		if (ray > PI)
+		{
+			ray_y = (((int)py >> 6) << 6) - 0.0001;
+			ray_x = (py - ray_y) * arc_tan + px;
+			y_offset = -64;
+			x_offset = -y_offset * arc_tan;
+		}
+		else if (ray < PI)
+		{
+			ray_y = (((int)py >> 6) << 6) + 64;
+			ray_x = (py - ray_y) * arc_tan + px;
+			y_offset = 64;
+			x_offset = -y_offset * arc_tan;
+		}
+		else
+		{
+			ray_x = px;
+			ray_y = py;
+			depth_of_field = DOF;
+		}
+		while (depth_of_field < DOF)
+		{
+			map_x = (int)(ray_x) >> 6;
+			map_y = (int)(ray_y) >> 6;
+			if (map_x > 0 && map_y > 0 &&
+				map_y < g->map.y && map_x < g->map.x &&
+				g->map.tab[map_y][map_x] == '1')
+			{
+				hx = ray_x;
+				hy = ray_y;
+				disH = cub_dist(px, py, hx, hy);
 				depth_of_field = DOF;
 			}
 			else
@@ -185,11 +179,11 @@ void	cub_raycaster(t_g *g)
 		ca = ca < 0 ? ca + 2 * PI : ca;
 		ca = ca > 2 * PI ? ca - 2 * PI : ca;
 		dist = dist * cos(ca); // fix fisheye
-		lineH = (64 * g->win.y) / dist;
+		lineH = (CUB_SIZE * g->win.y) / dist;
 		lineH = lineH > g->win.y ? g->win.y : lineH;
-		lineO = (g->win.y - lineH) / 2; // line offset
-		cub_draw(g, r * (g->win.x / 60), lineO, lineH + lineO);
-		ray += DR;
+		lineO = (int)(g->win.y - lineH) / 2; // line offset
+		cub_draw_line(g, r, lineO, lineH + lineO);
+		ray += step;
 		ray = ray < 0 ? ray + 2 * PI : ray;
 		ray = ray > 2 * PI ? ray - 2 * PI : ray;
 		r++;
@@ -223,6 +217,33 @@ int		cub_close(t_g *g)
 	return (g->error);
 }
 
+void	cub_clear_scene(t_g *g)
+{
+	int y;
+	int x;
+
+	y = 0;
+	while (y < g->win.y)
+	{
+		x = 0;
+		while (x < g->win.x)
+		{
+			cub_pixel_put(g, x, y, 0x303030);
+			x++;
+		}
+		y++;
+	}
+}
+
+int		cub_render_next_frame(t_g *g)
+{
+	cub_clear_scene(g);
+	cub_draw_walls(g);
+	mlx_put_image_to_window(g->mlx, g->win.ptr, g->img.img, 0, 0);
+	mlx_do_sync(g->mlx);
+	return (g->error);
+}
+
 int		cub_key(int key, t_g *g)
 {
 	if (key == ESC)
@@ -239,7 +260,7 @@ int		cub_key(int key, t_g *g)
 		cub_rotate(g, -1);
 	else if (key == RIGHT)
 		cub_rotate(g, 1);
-	cub_raycaster(g);
+	cub_render_next_frame(g);
 	return (1);
 }
 
@@ -249,7 +270,7 @@ int		cub_start(t_g *g)
 	g->img.img = mlx_new_image(g->mlx, g->win.x, g->win.y);
 	g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bits_per_pixel, &g->img.line_length,
 								&g->img.endian);
-	cub_raycaster(g);
+	cub_render_next_frame(g);
 	mlx_do_key_autorepeaton(g->mlx);
 	mlx_hook(g->win.ptr, 2, 1L<<0, cub_key, g);
 	mlx_hook(g->win.ptr, 17, 1L<<17, cub_close, g);

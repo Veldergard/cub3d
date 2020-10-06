@@ -6,7 +6,7 @@
 #    By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/21 22:59:15 by olaurine          #+#    #+#              #
-#    Updated: 2020/10/05 23:37:49 by olaurine         ###   ########.fr        #
+#    Updated: 2020/10/06 19:14:02 by olaurine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ OBJ = $(patsubst %.c,%.o,$(SRC))
 LIBFT = libft
 CC = gcc
 CFLAGS = -g -Wall -Wextra -Imlx_lnx
-OFLAGS = -Imlx_lnx -Lmlx_lnx -lmlx -L$(LIBFT) -lft -lXext -lX11 -lm -lbsd
+# OFLAGS = -Imlx_lnx -Lmlx_lnx -lmlx -L$(LIBFT) -lft -lXext -lX11 -lm -lbsd
+OFLAGS = -L$(LIBFT) -lft -lm -framework OpenGL -framework AppKit -lmlx
 
 .PHONY: all clean fclean re
 
@@ -26,7 +27,7 @@ libft/libft.a:
 	make all -C libft
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(OFLAGS)
+	$(CC) $(CFLAGS) $(OBJ) $(OFLAGS) -o $(NAME)
 
 %.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
