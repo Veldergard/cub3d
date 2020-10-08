@@ -48,8 +48,6 @@ void	cub_draw_walls(t_g *g)
 	float	not_tan;
 	float	ray_x;
 	float	ray_y;
-	float	px;
-	float	py;
 	float	disH;
 	float	disV;
 	float	hx;
@@ -62,8 +60,6 @@ void	cub_draw_walls(t_g *g)
 	float	lineO;
 	float	step;
 
-	px = g->player.x;
-	py = g->player.y;
 	r = 0;
 	ray = g->player.dir - DR * 30;
 	ray = ray < 0 ? ray + 2 * PI : ray;
@@ -74,27 +70,27 @@ void	cub_draw_walls(t_g *g)
 		// Vertical
 		depth_of_field = 0;
 		disV = 1000000;
-		vx = px;
-		vy = py;
+		vx = g->player.x;
+		vy = g->player.y;
 		not_tan = -tan(ray);
 		if (ray > PI2 && ray < PI3)
 		{
-			ray_x = (((int)px >> 6) << 6) - 0.0001;
-			ray_y = (px - ray_x) * not_tan + py;
+			ray_x = (((int)g->player.x >> 6) << 6) - 0.0001;
+			ray_y = (g->player.x - ray_x) * not_tan + g->player.y;
 			x_offset = -64;
 			y_offset = -x_offset * not_tan;
 		}
 		else if (ray < PI2 || ray > PI3)
 		{
-			ray_x = (((int)px >> 6) << 6) + 64;
-			ray_y = (px - ray_x) * not_tan + py;
+			ray_x = (((int)g->player.x >> 6) << 6) + 64;
+			ray_y = (g->player.x - ray_x) * not_tan + g->player.y;
 			x_offset = 64;
 			y_offset = -x_offset * not_tan;
 		}
 		else
 		{
-			ray_x = px;
-			ray_y = py;
+			ray_x = g->player.x;
+			ray_y = g->player.y;
 			depth_of_field = DOF;
 		}
 		while (depth_of_field < DOF)
@@ -107,7 +103,7 @@ void	cub_draw_walls(t_g *g)
 			{
 				vx = ray_x;
 				vy = ray_y;
-				disV = cub_dist(px, py, vx, vy);
+				disV = cub_dist(g->player.x, g->player.y, vx, vy);
 				depth_of_field = DOF;
 			}
 			else
@@ -120,27 +116,27 @@ void	cub_draw_walls(t_g *g)
 		// Horizontal
 		depth_of_field = 0;
 		disH = 1000000;
-		hx = px;
-		hy = py;
+		hx = g->player.x;
+		hy = g->player.y;
 		arc_tan = -1 / tan(ray);
 		if (ray > PI)
 		{
-			ray_y = (((int)py >> 6) << 6) - 0.0001;
-			ray_x = (py - ray_y) * arc_tan + px;
+			ray_y = (((int)g->player.y >> 6) << 6) - 0.0001;
+			ray_x = (g->player.y - ray_y) * arc_tan + g->player.x;
 			y_offset = -64;
 			x_offset = -y_offset * arc_tan;
 		}
 		else if (ray < PI)
 		{
-			ray_y = (((int)py >> 6) << 6) + 64;
-			ray_x = (py - ray_y) * arc_tan + px;
+			ray_y = (((int)g->player.y >> 6) << 6) + 64;
+			ray_x = (g->player.y - ray_y) * arc_tan + g->player.x;
 			y_offset = 64;
 			x_offset = -y_offset * arc_tan;
 		}
 		else
 		{
-			ray_x = px;
-			ray_y = py;
+			ray_x = g->player.x;
+			ray_y = g->player.y;
 			depth_of_field = DOF;
 		}
 		while (depth_of_field < DOF)
@@ -153,7 +149,7 @@ void	cub_draw_walls(t_g *g)
 			{
 				hx = ray_x;
 				hy = ray_y;
-				disH = cub_dist(px, py, hx, hy);
+				disH = cub_dist(g->player.x, g->player.y, hx, hy);
 				depth_of_field = DOF;
 			}
 			else
