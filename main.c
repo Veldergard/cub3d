@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/08 20:55:15 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/09 19:42:03 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		cub_draw_line(t_g *g, int x, float lineO, float lineH)
 	int y;
 
 	y = lineO;
-	while (y < lineH && y > 0 && y < g->win.y)
+	while (y < lineH && y >= 0 && y < g->win.y)
 		cub_pixel_put(g, x, y++, 0x28d4b1);
 	return (1);
 }
@@ -46,13 +46,13 @@ void	cub_rotate(t_g *g, double dir)
 
 void	cub_move(t_g *g, double dir)
 {
-	g->player.y += dir * sin(g->player.dir) * SPEED;
+	g->player.y -= dir * sin(g->player.dir) * SPEED;
 	g->player.x += dir * cos(g->player.dir) * SPEED;
 }
 
 void	cub_strafe(t_g *g, double dir)
 {
-	g->player.y -= dir * cos(g->player.dir) * SPEED;
+	g->player.y += dir * cos(g->player.dir) * SPEED;
 	g->player.x += dir * sin(g->player.dir) * SPEED;
 }
 
