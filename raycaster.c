@@ -131,7 +131,6 @@ void cub_drayw_walls(t_g *g)
 		lineH = lineH > g->win.y ? g->win.y : lineH;
 		lineO = (int)(g->win.y - lineH) / 2;
 		cub_draw_line(g, r, lineO, lineH + lineO);
-		// ray -= ray - 1 * DR;
 		ray += step;
 		ray = ray < 0 ? ray + 2 * PI : ray;
 		ray = ray > 2 * PI ? ray - 2 * PI : ray;
