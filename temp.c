@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 18:15:37 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/09 18:15:39 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/09 20:06:54 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,10 @@ void	cub_draw_walls(t_g *g)
 	r = 0;
 	ray = g->player.dir - DR * 30;
 	ray = ray < 0 ? ray + 2 * PI : ray;
-	ray = ray > 2 * PI ? ray - 2 * PI : ray;
+	ray = ray >= 2 * PI ? ray - 2 * PI : ray;
 	step = 60. * DR / (float)g->win.x;
 	while (r < g->win.x)
 	{
-		// Vertical
 		depth_of_field = 0;
 		disV = 1000000;
 		not_tan = -tan(ray);
