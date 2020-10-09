@@ -18,8 +18,9 @@ void cub_draw_walls(t_g *g)
 	int		mx;
 	int		my;
 	int		dof;
-	int		lineH;
-	int		lineO;
+	int		line_h;
+	int		line_o;
+	int		color;
 	float	ca;
 	float	vx;
 	float	vy;
@@ -29,8 +30,8 @@ void cub_draw_walls(t_g *g)
 	float	xo;
 	float	yo;
 	float	dis_v;
-	float	disH;
-	float	Tan;
+	float	dis_h;
+	float	m_tan;
 	float	step;
 
 	r = 0;
@@ -42,35 +43,35 @@ void cub_draw_walls(t_g *g)
 	{
 		dof = 0;
 		dis_v = 100000;
-		Tan = tan(ray);
+		m_tan = tan(ray);
 		if (cos(ray) > 0.001)
 		{
 			rx = (((int)g->player.x >> 6) << 6) + 64;
-			ry = (g->player.x - rx) * Tan + g->player.y;
+			ry = (g->player.x - rx) * m_tan + g->player.y;
 			xo = 64;
-			yo = -xo * Tan;
+			yo = -xo * m_tan;
 		}
 		else if (cos(ray) < -0.001)
 		{
 			rx = (((int)g->player.x >> 6) << 6) - 0.0001;
-			ry = (g->player.x - rx) * Tan + g->player.y;
+			ry = (g->player.x - rx) * m_tan + g->player.y;
 			xo = -64;
-			yo = -xo * Tan;
+			yo = -xo * m_tan;
 		}
 		else
 		{
 			rx = g->player.x;
 			ry = g->player.y;
-			dof = 8;
+			dof = DOF;
 		}
-		while (dof < 8)
+		while (dof < DOF)
 		{
 			mx = (int)(rx) >> 6;
 			my = (int)(ry) >> 6;
 			if(mx >= 0 && my >= 0 && mx < g->map.x && my < g->map.y &&
 				g->map.tab[my][mx] == '1')
 			{
-				dof = 8;
+				dof = DOF;
 				dis_v = cos(ray) * (rx - g->player.x) - sin(ray) * (ry - g->player.y);
 			}
 			else
@@ -82,39 +83,38 @@ void cub_draw_walls(t_g *g)
 		}
 		vx = rx;
 		vy = ry;
-
 		dof = 0;
-		disH = 100000;
-		Tan = 1.0 / Tan;
+		dis_h = 100000;
+		m_tan = 1.0 / m_tan;
 		if (sin(ray) > 0.001)
 		{
 			ry = (((int)g->player.y >> 6) << 6) - 0.0001;
-			rx = (g->player.y - ry) * Tan + g->player.x;
+			rx = (g->player.y - ry) * m_tan + g->player.x;
 			yo = -64;
-			xo = -yo * Tan;
+			xo = -yo * m_tan;
 		}
 		else if (sin(ray) < -0.001)
 		{
 			ry = (((int)g->player.y >> 6) << 6) + 64;
-			rx = (g->player.y - ry) * Tan + g->player.x;
+			rx = (g->player.y - ry) * m_tan + g->player.x;
 			yo = 64;
-			xo = -yo * Tan;
+			xo = -yo * m_tan;
 		}
 		else
 		{
 			rx = g->player.x;
 			ry = g->player.y;
-			dof = 8;
+			dof = DOF;
 		}
-		while (dof < 8)
+		while (dof < DOF)
 		{
 			mx = (int)(rx) >> 6;
 			my = (int)(ry) >> 6;
 			if (mx >= 0 && my >= 0 && mx < g->map.x && my < g->map.y &&
 				g->map.tab[my][mx] == '1')
 			{
-				dof = 8;
-				disH = cos(ray) * (rx - g->player.x) - sin(ray) * (ry - g->player.y);
+				dof = DOF;
+				dis_h = cos(ray) * (rx - g->player.x) - sin(ray) * (ry - g->player.y);
 			}
 			else
 			{
@@ -123,17 +123,22 @@ void cub_draw_walls(t_g *g)
 				dof += 1;
 			}
 		}
-		if (dis_v < disH)
-			disH = dis_v;
+		if (dis_v < dis_h)
+		{
+			dis_h = dis_v;
+			color = ray >= PI2 && ray <= PI3 ? 0x123456 : 0x654321;
+		}
+		else
+			color = ray >= 0 && ray <= PI ? 0x987654 : 0x456789;
 		ca = g->player.dir - ray;
-		disH = disH * cos(ca);
-		lineH = (CUB_SIZE * g->win.y) / disH;
-		lineH = lineH > g->win.y ? g->win.y : lineH;
-		lineO = (int)(g->win.y - lineH) / 2;
-		cub_draw_line(g, r, lineO, lineH + lineO);
+		dis_h = dis_h * cos(ca);
+		line_h = (CUB_SIZE * g->win.y) / dis_h;
+		line_h = line_h > g->win.y ? g->win.y : line_h;
+		line_o = (int)(g->win.y - line_h) / 2;
+		cub_draw_line(g, r, line_o, line_h + line_o, color);
 		ray += step;
 		ray = ray < 0 ? ray + 2 * PI : ray;
-		ray = ray > 2 * PI ? ray - 2 * PI : ray;
+		ray = ray >= 2 * PI ? ray - 2 * PI : ray;
 		r++;
 	}
 }

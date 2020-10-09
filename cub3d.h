@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/08 20:49:28 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/09 19:56:48 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,8 @@ void				cub_set_dir(t_g *g, char c);
 int					cub_set_player(t_g *g);
 int					cub_check_map(t_g *g);
 void				cub_draw_walls(t_g *g);
-int					cub_draw_line(t_g *g, int x, float lineO, float lineH);
+int					cub_draw_line(t_g *g, int x, float lineO, float lineH,
+									int color);
 
 
 #endif

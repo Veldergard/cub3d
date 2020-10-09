@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/09 19:42:03 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/09 19:56:24 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ float	cub_dist(float ax, float ay, float bx, float by)
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
 }
 
-int		cub_draw_line(t_g *g, int x, float lineO, float lineH)
+int		cub_draw_line(t_g *g, int x, float lineO, float lineH, int color)
 {
 	int y;
 
 	y = lineO;
 	while (y < lineH && y >= 0 && y < g->win.y)
-		cub_pixel_put(g, x, y++, 0x28d4b1);
+		cub_pixel_put(g, x, y++, color);
 	return (1);
 }
 
