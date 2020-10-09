@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 19:58:33 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/06 21:52:29 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/08 19:53:47 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,17 +67,17 @@ void	cub_set_dir(t_g *g, char c)
 	else if (c == 'N')
 	{
 		g->player.chr = 'N';
-		g->player.dir = 0.5;
+		g->player.dir = PI3;
 	}
 	else if (c == 'W')
 	{
 		g->player.chr = 'W';
-		g->player.dir = 1;
+		g->player.dir = PI;
 	}
 	else if (c == 'S')
 	{
 		g->player.chr = 'S';
-		g->player.dir = 1.5;
+		g->player.dir = PI2;
 	}
 }
 
