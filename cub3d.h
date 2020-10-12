@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/09 19:56:48 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/12 19:38:29 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,13 @@ typedef struct		s_map
 
 typedef struct		s_text
 {
-	unsigned int	*n; // north
-	unsigned int	*s; // south
-	unsigned int	*e; // east
-	unsigned int	*w; // west
-	unsigned int	*sp; //sprite
-	unsigned int	floor; //floor color
-	unsigned int	ceiling; // ceiling color
+	void			*img;
+	void			*ptr;
+	int				wdt;
+	int				hgt;
+	int				bpp;
+	int				size_line;
+	int				endian;
 }					t_text;
 
 typedef struct		s_win
@@ -100,7 +100,13 @@ typedef struct		s_win
 typedef struct		s_g
 {
 	t_win			win;
-	t_text			text;
+	t_text			n;
+	t_text			s;
+	t_text			e;
+	t_text			w;
+	t_text			sp;
+	unsigned int	floor;
+	unsigned int	ceiling;
 	int				error; // error code
 	t_map			map;
 	t_player		player;

@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/09 19:56:24 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/12 19:18:16 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	cub_clear_scene(t_g *g)
 		x = 0;
 		while (x < g->win.x)
 		{
-			cub_pixel_put(g, x, y, 0x4287f5);
+			cub_pixel_put(g, x, y, g->floor);
 			x++;
 		}
 		y++;
@@ -83,7 +83,7 @@ void	cub_clear_scene(t_g *g)
 		x = 0;
 		while (x < g->win.x)
 		{
-			cub_pixel_put(g, x, y, 0xd742f5);
+			cub_pixel_put(g, x, y, g->ceiling);
 			x++;
 		}
 		y++;
@@ -143,8 +143,8 @@ int		cub_init(char *cub, int bmp)
 	t_g		g;
 
 	ft_bzero(&g, sizeof(g));
-	g.text.ceiling = NONE;
-	g.text.floor = NONE;
+	g.ceiling = NONE;
+	g.floor = NONE;
 	g.mlx = mlx_init();
 	cub_parse(cub, &g);
 	cub_make_sqr_map(&g);
