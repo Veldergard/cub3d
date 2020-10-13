@@ -6,32 +6,39 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/12 19:18:16 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/13 18:46:03 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+char	*get_image_pixel(t_img *image, int x, int y)
+{
+	return (image->addr + y * image->line_length + x * image->bpp / 8);
+}
+
 void	cub_pixel_put(t_g *g, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = g->img.addr + y * g->img.line_length + x * (g->img.bits_per_pixel / 8);
+	dst = get_image_pixel(&g->img, x, y);
 	*(unsigned int*)dst = color;
 }
 
-float	cub_dist(float ax, float ay, float bx, float by)
+int		cub_draw_line(t_g *g, int x, float lineO, float lineH, float rx, t_img *img)
 {
-	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
-}
+	unsigned int	color;
+	float			img_x;
+	float   		img_y;
 
-int		cub_draw_line(t_g *g, int x, float lineO, float lineH, int color)
-{
-	int y;
-
-	y = lineO;
-	while (y < lineH && y >= 0 && y < g->win.y)
-		cub_pixel_put(g, x, y++, color);
+	img_y = 0;
+	img_x = (float)rx / CUB_SIZE * img->hgt;
+	while (lineO < lineH && lineO >= 0 && lineO < g->win.y)
+	{
+		color = *(unsigned int *)get_image_pixel(img, img_x, img_y);
+		cub_pixel_put(g, x, lineO++, color);
+        img_y = (img_y + lineO) / lineH * img->wdt;
+	}
 	return (1);
 }
 
@@ -46,8 +53,19 @@ void	cub_rotate(t_g *g, double dir)
 
 void	cub_move(t_g *g, double dir)
 {
-	g->player.y -= dir * sin(g->player.dir) * SPEED;
-	g->player.x += dir * cos(g->player.dir) * SPEED;
+    float   new_x;
+    float   new_y;
+
+    new_y = g->player.y - dir * sin(g->player.dir) * SPEED;
+    if ((int)(new_y / 64) >= 0 && (int)(new_y / 64) < g->map.y)
+    {
+        g->player.y = new_y;
+    }
+    new_x = g->player.x + dir * cos(g->player.dir) * SPEED;
+    if ((int)(new_x / 64) >= 0 && (int)(new_x / 64) < g->map.x && g->map.tab[][])
+    {
+        g->player.x = new_x;
+    }
 }
 
 void	cub_strafe(t_g *g, double dir)
@@ -73,7 +91,7 @@ void	cub_clear_scene(t_g *g)
 		x = 0;
 		while (x < g->win.x)
 		{
-			cub_pixel_put(g, x, y, g->floor);
+			cub_pixel_put(g, x, y, g->ceiling);
 			x++;
 		}
 		y++;
@@ -83,7 +101,7 @@ void	cub_clear_scene(t_g *g)
 		x = 0;
 		while (x < g->win.x)
 		{
-			cub_pixel_put(g, x, y, g->ceiling);
+			cub_pixel_put(g, x, y, g->floor);
 			x++;
 		}
 		y++;
@@ -123,8 +141,8 @@ int		cub_start(t_g *g)
 {
 	g->win.ptr = mlx_new_window(g->mlx, g->win.x, g->win.y, "cub3D");
 	g->img.img = mlx_new_image(g->mlx, g->win.x, g->win.y);
-	g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bits_per_pixel, &g->img.line_length,
-								&g->img.endian);
+	g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bpp, &g->img.line_length,
+                                    &g->img.endian);
 	cub_render_next_frame(g);
 	mlx_do_key_autorepeaton(g->mlx);
 	mlx_hook(g->win.ptr, 2, 1L<<0, cub_key, g);

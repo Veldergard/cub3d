@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/12 19:55:21 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/13 18:05:22 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,9 @@ int		check_ending(char *file, char *ext)
 	return (0);
 }
 
-int		cub_xpm(t_g *g, t_text *adr, char *file)
+int		cub_xpm(t_g *g, t_img *adr, char *file)
 {
 	int		fd;
-	int		tab[5];
-    void	*img;
 
 	if (!check_ending(file, "xpm"))
 		return (-1);
@@ -83,25 +81,19 @@ int		cub_xpm(t_g *g, t_text *adr, char *file)
 	if ((fd = open(file, O_RDONLY)) == -1 || errno)
 		return (-1);
 	close(fd);
-//	adr->img = mlx_xpm_file_to_image(g->mlx, file, &(adr->wdt), &(adr->hgt));
-    img = mlx_xpm_file_to_image(g->mlx, file, &tab[0], &tab[1]);
-	printf("lol if\n\n\n");
-	if (img == NULL || adr->wdt != 64 || adr->hgt != 64)
+	adr->img = mlx_xpm_file_to_image(g->mlx, file, &(adr->wdt), &(adr->hgt));
+	if (adr->img == NULL || adr->wdt != 64 || adr->hgt != 64)
 		return (-1);
-	printf("addr\n");
-	adr->ptr = (unsigned int *)mlx_get_data_addr(img, &(adr->bpp), &(adr->size_line), &(adr->endian));
-	printf("free\n");
-	free(img);
-	printf("afterfree\n");
+	adr->addr = mlx_get_data_addr(adr->img, &(adr->bpp), &(adr->line_length), &(adr->endian));
 	return (0);
 }
 
-int		parse_texture(t_g *g, t_text *adr, char *line, int *i)
+int		parse_texture(t_g *g, t_img *adr, char *line, int *i)
 {
 	char	*file;
 	int		j;
 
-	if (adr->ptr)
+	if (adr->addr)
 		return (-7);
 	(*i) += 2;
 	skip_spaces(line, i);

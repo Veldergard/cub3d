@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/12 19:38:29 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/13 18:49:56 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,10 @@ typedef struct		s_player
 typedef struct		s_img
 {
 	void			*img;
-	char			*addr;
-	int				bits_per_pixel;
+    char			*addr;
+    int				wdt;
+    int				hgt;
+    int				bpp;
 	int				line_length;
 	int				endian;
 }					t_img;
@@ -79,17 +81,6 @@ typedef struct		s_map
 	int				y;
 }					t_map;
 
-typedef struct		s_text
-{
-	void			*img;
-	void			*ptr;
-	int				wdt;
-	int				hgt;
-	int				bpp;
-	int				size_line;
-	int				endian;
-}					t_text;
-
 typedef struct		s_win
 {
 	int				x; // width of window
@@ -100,13 +91,13 @@ typedef struct		s_win
 typedef struct		s_g
 {
 	t_win			win;
-	t_text			n;
-	t_text			s;
-	t_text			e;
-	t_text			w;
-	t_text			sp;
-	unsigned int	floor;
-	unsigned int	ceiling;
+	unsigned int	floor; //floor color
+	unsigned int	ceiling; // ceiling color
+	t_img			n;
+	t_img			s;
+	t_img			e;
+	t_img			w;
+	t_img			sp;
 	int				error; // error code
 	t_map			map;
 	t_player		player;
@@ -122,7 +113,7 @@ int					cub_set_player(t_g *g);
 int					cub_check_map(t_g *g);
 void				cub_draw_walls(t_g *g);
 int					cub_draw_line(t_g *g, int x, float lineO, float lineH,
-									int color);
+                                     float rx, t_img *img);
 
 
 #endif

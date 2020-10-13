@@ -20,7 +20,6 @@ void cub_draw_walls(t_g *g)
 	int		dof;
 	int		line_h;
 	int		line_o;
-	int		color;
 	float	ca;
 	float	vx;
 	float	vy;
@@ -33,6 +32,7 @@ void cub_draw_walls(t_g *g)
 	float	dis_h;
 	float	m_tan;
 	float	step;
+	t_img	*text;
 
 	r = 0;
 	ray = g->player.dir - 30 * DR;
@@ -81,7 +81,7 @@ void cub_draw_walls(t_g *g)
 				dof += 1;
 			}
 		}
-		vx = rx;
+        vx = rx;
 		vy = ry;
 		dof = 0;
 		dis_h = 100000;
@@ -126,19 +126,23 @@ void cub_draw_walls(t_g *g)
 		if (dis_v < dis_h)
 		{
 			dis_h = dis_v;
-			color = ray >= PI2 && ray <= PI3 ? 0x123456 : 0x654321;
+			text = ray >= PI2 && ray <= PI3 ? &(g->w) : &(g->e);
+            rx = vy;
+            ry = vy;
 		}
 		else
-			color = ray >= 0 && ray <= PI ? 0x987654 : 0x456789;
+        {
+            text = ray >= 0 && ray <= PI ? &(g->n) : &(g->s);
+        }
 		ca = g->player.dir - ray;
 		dis_h = dis_h * cos(ca);
 		line_h = (CUB_SIZE * g->win.y) / dis_h;
 		line_h = line_h > g->win.y ? g->win.y : line_h;
 		line_o = (int)(g->win.y - line_h) / 2;
-		cub_draw_line(g, r, line_o, line_h + line_o, color);
+		cub_draw_line(g, r, line_o, line_h + line_o, (int)rx % 64, (int)ry % 64, text);
 		ray += step;
 		ray = ray < 0 ? ray + 2 * PI : ray;
 		ray = ray >= 2 * PI ? ray - 2 * PI : ray;
 		r++;
-	}
+    }
 }

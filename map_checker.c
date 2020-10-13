@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 19:58:33 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/09 20:02:36 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/13 17:58:55 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ int		cub_set_player(t_g *g)
 				g->player.x = (j + 0.5) * 64;
 				g->player.y = (i + 0.5) * 64;
 				cub_set_dir(g, g->map.tab[i][j]);
-				printf("%f %f\n", g->player.x, g->player.y);
 			}
 			j++;
 		}
