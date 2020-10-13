@@ -55,6 +55,29 @@
 
 # endif
 
+typedef struct		s_wall
+{
+	int				r;
+	int				mx;
+	int				my;
+	int				dof;
+	int				line_h;
+	int				line_o;
+	float			ca;
+	float			vx;
+	float			vy;
+	float			rx;
+	float			ry;
+	float			ray;
+	float			xo;
+	float			yo;
+	float			dis_v;
+	float			dis_h;
+	float			m_tan;
+	float			step;
+	t_img			*text;
+}					t_wall;
+
 typedef struct		s_player
 {
 	float			x;

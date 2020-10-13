@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/13 18:46:03 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/13 23:50:46 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,20 @@ void	cub_pixel_put(t_g *g, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-int		cub_draw_line(t_g *g, int x, float lineO, float lineH, float rx, t_img *img)
+int		cub_draw_line(t_g *g, t_wall *wall)
 {
 	unsigned int	color;
 	float			img_x;
 	float   		img_y;
 
-	img_y = 0;
-	img_x = (float)rx / CUB_SIZE * img->hgt;
-	while (lineO < lineH && lineO >= 0 && lineO < g->win.y)
+	img_y = wall->lineO == 0 ?  : 0;
+	wall.line_h += wall.line_o;
+	img_x = (float)((int)(wall->rx) % 64) / CUB_SIZE * img->hgt;
+	while (wall->lineO < wall->lineH && wall->lineO >= 0 && wall->lineO < g->win.y)
 	{
 		color = *(unsigned int *)get_image_pixel(img, img_x, img_y);
-		cub_pixel_put(g, x, lineO++, color);
-        img_y = (img_y + lineO) / lineH * img->wdt;
+		cub_pixel_put(g, wall->r, (wall->lineO)++, color);
+		img_y = (img_y + wall->lineO) / wall->lineH * img->wdt;
 	}
 	return (1);
 }
@@ -53,25 +54,44 @@ void	cub_rotate(t_g *g, double dir)
 
 void	cub_move(t_g *g, double dir)
 {
-    float   new_x;
-    float   new_y;
+	float	x;
+	float	y;
 
-    new_y = g->player.y - dir * sin(g->player.dir) * SPEED;
-    if ((int)(new_y / 64) >= 0 && (int)(new_y / 64) < g->map.y)
-    {
-        g->player.y = new_y;
-    }
-    new_x = g->player.x + dir * cos(g->player.dir) * SPEED;
-    if ((int)(new_x / 64) >= 0 && (int)(new_x / 64) < g->map.x && g->map.tab[][])
-    {
-        g->player.x = new_x;
-    }
+	y = g->player.y - dir * sin(g->player.dir) * SPEED;
+	if ((int)(y / 64) >= 0 && (int)(y / 64) < g->map.y &&
+			(g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] == '0' ||
+			g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] == '2'))
+		g->player.y = y;
+	else if ((int)(y / 64) >= 0 && (int)(y / 64) < g->map.y)
+		g->player.y = (float)((int)(y / 64)) * 64;
+	x = g->player.x + dir * cos(g->player.dir) * SPEED;
+	if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.y &&
+			(g->map.tab[(int)(g->player.x / 64)][(int)(x / 64)] == '0' ||
+			g->map.tab[(int)(g->player.y / 64)][(int)(x / 64)] == '2'))
+		g->player.x = x;
+	else if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.x)
+		g->player.x = (float)((int)(x / 64)) * 64;
 }
 
 void	cub_strafe(t_g *g, double dir)
 {
-	g->player.y += dir * cos(g->player.dir) * SPEED;
-	g->player.x += dir * sin(g->player.dir) * SPEED;
+	float	x;
+	float	y;
+
+	y += dir * cos(g->player.dir) * SPEED;
+	if ((int)(y / 64) >= 0 && (int)(y / 64) < g->map.y &&
+			(g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] == '0' ||
+			g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] == '2'))
+		g->player.y = y;
+	else if ((int)(y / 64) >= 0 && (int)(y / 64) < g->map.y)
+		g->player.y = (float)((int)(y / 64)) * 64;
+	x += dir * sin(g->player.dir) * SPEED;
+	if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.y &&
+			(g->map.tab[(int)(g->player.x / 64)][(int)(x / 64)] == '0' ||
+			g->map.tab[(int)(g->player.y / 64)][(int)(x / 64)] == '2'))
+		g->player.x = x;
+	else if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.x)
+		g->player.x = (float)((int)(x / 64)) * 64;
 }
 
 int		cub_close(t_g *g)
@@ -142,7 +162,7 @@ int		cub_start(t_g *g)
 	g->win.ptr = mlx_new_window(g->mlx, g->win.x, g->win.y, "cub3D");
 	g->img.img = mlx_new_image(g->mlx, g->win.x, g->win.y);
 	g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bpp, &g->img.line_length,
-                                    &g->img.endian);
+									&g->img.endian);
 	cub_render_next_frame(g);
 	mlx_do_key_autorepeaton(g->mlx);
 	mlx_hook(g->win.ptr, 2, 1L<<0, cub_key, g);
