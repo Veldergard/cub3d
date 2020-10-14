@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/13 18:49:56 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/14 20:08:45 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define PI3 3 * PI / 2
 # define DR 0.0174533
 # define SPEED 10
-# define R_SPD 0.05
+# define R_SPD 0.1
 # define DOF 64
 # define CUB_SIZE 64
 
@@ -55,6 +55,39 @@
 
 # endif
 
+typedef struct		s_player
+{
+	float			x;
+	float			y;
+	float			dir;
+	char			chr;
+}					t_player;
+
+typedef struct		s_img
+{
+	void			*img;
+	char			*addr;
+	int				wdt;
+	int				hgt;
+	int				bpp;
+	int				line_length;
+	int				endian;
+}					t_img;
+
+typedef struct		s_map
+{
+	char			**tab;
+	int				x;
+	int				y;
+}					t_map;
+
+typedef struct		s_win
+{
+	int				x; // width of window
+	int				y; // height of window
+	void			*ptr;
+}					t_win;
+
 typedef struct		s_wall
 {
 	int				r;
@@ -77,39 +110,6 @@ typedef struct		s_wall
 	float			step;
 	t_img			*text;
 }					t_wall;
-
-typedef struct		s_player
-{
-	float			x;
-	float			y;
-	float			dir;
-	char			chr;
-}					t_player;
-
-typedef struct		s_img
-{
-	void			*img;
-    char			*addr;
-    int				wdt;
-    int				hgt;
-    int				bpp;
-	int				line_length;
-	int				endian;
-}					t_img;
-
-typedef struct		s_map
-{
-	char			**tab;
-	int				x;
-	int				y;
-}					t_map;
-
-typedef struct		s_win
-{
-	int				x; // width of window
-	int				y; // height of window
-	void			*ptr;
-}					t_win;
 
 typedef struct		s_g
 {
@@ -135,8 +135,9 @@ void				cub_set_dir(t_g *g, char c);
 int					cub_set_player(t_g *g);
 int					cub_check_map(t_g *g);
 void				cub_draw_walls(t_g *g);
-int					cub_draw_line(t_g *g, int x, float lineO, float lineH,
-                                     float rx, t_img *img);
+// int					cub_draw_line(t_g *g, int x, float lineO, float lineH,
+                                    //  float rx, t_img *img);
+int					cub_draw_line(t_g *g, t_wall *wall);
 
 
 #endif

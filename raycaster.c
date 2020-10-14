@@ -25,18 +25,18 @@ void cub_draw_walls(t_g *g)
 	{
 		wall.dof = 0;
 		wall.dis_v = 100000;
-		wall.m_tan = tan(ray);
+		wall.m_tan = tan(wall.ray);
 		if (cos(wall.ray) > 0.001)
 		{
 			wall.rx = (((int)g->player.x >> 6) << 6) + 64;
-			wall.ry = (g->player.x - rx) * wall.m_tan + g->player.y;
+			wall.ry = (g->player.x - wall.rx) * wall.m_tan + g->player.y;
 			wall.xo = 64;
 			wall.yo = -wall.xo * wall.m_tan;
 		}
 		else if (cos(wall.ray) < -0.001)
 		{
 			wall.rx = (((int)g->player.x >> 6) << 6) - 0.0001;
-			wall.ry = (g->player.x - rx) * wall.m_tan + g->player.y;
+			wall.ry = (g->player.x - wall.rx) * wall.m_tan + g->player.y;
 			wall.xo = -64;
 			wall.yo = -wall.xo * wall.m_tan;
 		}
@@ -90,8 +90,8 @@ void cub_draw_walls(t_g *g)
 		}
 		while (wall.dof < DOF)
 		{
-			wall.mx = (int)(rx) >> 6;
-			wall.my = (int)(ry) >> 6;
+			wall.mx = (int)(wall.rx) >> 6;
+			wall.my = (int)(wall.ry) >> 6;
 			if (wall.mx >= 0 && wall.my >= 0 && wall.mx < g->map.x &&
 			wall.my < g->map.y && g->map.tab[wall.my][wall.mx] == '1')
 			{
@@ -108,7 +108,7 @@ void cub_draw_walls(t_g *g)
 		if (wall.dis_v < wall.dis_h)
 		{
 			wall.dis_h = wall.dis_v;
-			wall.text = wall.ray >= PI2 && ray <= PI3 ? &(g->w) : &(g->e);
+			wall.text = wall.ray >= PI2 && wall.ray <= PI3 ? &(g->w) : &(g->e);
 			wall.rx = wall.vy;
 			wall.ry = wall.vy;
 		}
@@ -119,12 +119,13 @@ void cub_draw_walls(t_g *g)
 		wall.ca = g->player.dir - wall.ray;
 		wall.dis_h = wall.dis_h * cos(wall.ca);
 		wall.line_h = (CUB_SIZE * g->win.y) / wall.dis_h;
-		wall.line_o = (int)(g->win.y - wall.line_h) / 2;
-		wall.line_o = wall.line_o < 0 ? 0 : wall.line_o;
+		wall.line_o = 0;
+		if (wall.line_h < g->win.y)
+			wall.line_o = (int)(g->win.y - wall.line_h) / 2;
 		cub_draw_line(g, &wall);
 		wall.ray += wall.step;
 		wall.ray = wall.ray < 0 ? wall.ray + 2 * PI : wall.ray;
 		wall.ray = wall.ray >= 2 * PI ? wall.ray - 2 * PI : wall.ray;
-		r++;
+		wall.r++;
 	}
 }

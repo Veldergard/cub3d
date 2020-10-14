@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/13 18:05:22 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/14 17:52:56 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ int		parse_resolution(t_g *g, char *line, int *i)
 	(*i)++;
 	g->win.x = ft_atoi_i(line, i);
 	g->win.y = ft_atoi_i(line, i);
-	if (g->win.x > 1920)
-		g->win.x = 1920;
-	if (g->win.y > 1080)
-		g->win.y = 1080;
+	if (g->win.x > 16000)
+		g->win.x = 16000;
+	if (g->win.y > 16000)
+		g->win.y = 16000;
 	(*i) += ft_num_len(line);
 	skip_spaces(line, i);
 	if (g->win.x <= 0 || g->win.y <= 0 || line[*i])

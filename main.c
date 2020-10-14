@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/13 23:50:46 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/14 20:06:23 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,22 @@ int		cub_draw_line(t_g *g, t_wall *wall)
 {
 	unsigned int	color;
 	float			img_x;
-	float   		img_y;
+	float			img_y;
+	float			step_y;
+	int				y;
 
-	img_y = wall->lineO == 0 ?  : 0;
-	wall.line_h += wall.line_o;
-	img_x = (float)((int)(wall->rx) % 64) / CUB_SIZE * img->hgt;
-	while (wall->lineO < wall->lineH && wall->lineO >= 0 && wall->lineO < g->win.y)
+	img_y = 0;
+	if (wall->line_h >= g->win.y)
+		img_y = ((float)wall->line_h - g->win.y) / (2 * wall->line_h / CUB_SIZE);
+	step_y = ((float)CUB_SIZE) / wall->line_h;
+	img_x = (float)((int)(wall->rx) % 64) / CUB_SIZE * wall->text->hgt;
+	y = wall->line_o < 0 ? 0 : wall->line_o;
+	while (y < wall->line_h + wall->line_o && y >= 0 && y < g->win.y)
 	{
-		color = *(unsigned int *)get_image_pixel(img, img_x, img_y);
-		cub_pixel_put(g, wall->r, (wall->lineO)++, color);
-		img_y = (img_y + wall->lineO) / wall->lineH * img->wdt;
+		color = *(unsigned int *)get_image_pixel(wall->text, img_x, (int)img_y);
+		cub_pixel_put(g, wall->r, y, color);
+		img_y += step_y;
+		y++;
 	}
 	return (1);
 }
@@ -59,18 +65,12 @@ void	cub_move(t_g *g, double dir)
 
 	y = g->player.y - dir * sin(g->player.dir) * SPEED;
 	if ((int)(y / 64) >= 0 && (int)(y / 64) < g->map.y &&
-			(g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] == '0' ||
-			g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] == '2'))
+			g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] != '1')
 		g->player.y = y;
-	else if ((int)(y / 64) >= 0 && (int)(y / 64) < g->map.y)
-		g->player.y = (float)((int)(y / 64)) * 64;
 	x = g->player.x + dir * cos(g->player.dir) * SPEED;
-	if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.y &&
-			(g->map.tab[(int)(g->player.x / 64)][(int)(x / 64)] == '0' ||
-			g->map.tab[(int)(g->player.y / 64)][(int)(x / 64)] == '2'))
+	if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.x &&
+			g->map.tab[(int)(g->player.y / 64)][(int)(x / 64)] != '1')
 		g->player.x = x;
-	else if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.x)
-		g->player.x = (float)((int)(x / 64)) * 64;
 }
 
 void	cub_strafe(t_g *g, double dir)
@@ -78,20 +78,14 @@ void	cub_strafe(t_g *g, double dir)
 	float	x;
 	float	y;
 
-	y += dir * cos(g->player.dir) * SPEED;
+	y = g->player.y + dir * cos(g->player.dir) * SPEED;
 	if ((int)(y / 64) >= 0 && (int)(y / 64) < g->map.y &&
-			(g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] == '0' ||
-			g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] == '2'))
+			g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] != '1')
 		g->player.y = y;
-	else if ((int)(y / 64) >= 0 && (int)(y / 64) < g->map.y)
-		g->player.y = (float)((int)(y / 64)) * 64;
-	x += dir * sin(g->player.dir) * SPEED;
-	if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.y &&
-			(g->map.tab[(int)(g->player.x / 64)][(int)(x / 64)] == '0' ||
-			g->map.tab[(int)(g->player.y / 64)][(int)(x / 64)] == '2'))
+	x = g->player.x + dir * sin(g->player.dir) * SPEED;
+	if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.x &&
+			g->map.tab[(int)(g->player.y / 64)][(int)(x / 64)] != '1')
 		g->player.x = x;
-	else if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.x)
-		g->player.x = (float)((int)(x / 64)) * 64;
 }
 
 int		cub_close(t_g *g)
