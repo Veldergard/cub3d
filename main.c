@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/14 20:06:23 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/15 16:51:07 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,10 @@ int		cub_draw_line(t_g *g, t_wall *wall)
 
 	img_y = 0;
 	if (wall->line_h >= g->win.y)
-		img_y = ((float)wall->line_h - g->win.y) / (2 * wall->line_h / CUB_SIZE);
+		img_y = ((float)wall->line_h - g->win.y) /
+		(2 * (float)wall->line_h / CUB_SIZE);
 	step_y = ((float)CUB_SIZE) / wall->line_h;
-	img_x = (float)((int)(wall->rx) % 64) / CUB_SIZE * wall->text->hgt;
+	img_x = (float)((int)(wall->rx) % CUB_SIZE) / CUB_SIZE * wall->text->hgt;
 	y = wall->line_o < 0 ? 0 : wall->line_o;
 	while (y < wall->line_h + wall->line_o && y >= 0 && y < g->win.y)
 	{
@@ -64,12 +65,12 @@ void	cub_move(t_g *g, double dir)
 	float	y;
 
 	y = g->player.y - dir * sin(g->player.dir) * SPEED;
-	if ((int)(y / 64) >= 0 && (int)(y / 64) < g->map.y &&
-			g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] != '1')
+	if ((int)(y / CUB_SIZE) >= 0 && (int)(y / CUB_SIZE) < g->map.y &&
+		g->map.tab[(int)(y / CUB_SIZE)][(int)(g->player.x / CUB_SIZE)] != '1')
 		g->player.y = y;
 	x = g->player.x + dir * cos(g->player.dir) * SPEED;
-	if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.x &&
-			g->map.tab[(int)(g->player.y / 64)][(int)(x / 64)] != '1')
+	if ((int)(x / CUB_SIZE) >= 0 && (int)(x / CUB_SIZE) < g->map.x &&
+		g->map.tab[(int)(g->player.y / CUB_SIZE)][(int)(x / CUB_SIZE)] != '1')
 		g->player.x = x;
 }
 
@@ -79,12 +80,12 @@ void	cub_strafe(t_g *g, double dir)
 	float	y;
 
 	y = g->player.y + dir * cos(g->player.dir) * SPEED;
-	if ((int)(y / 64) >= 0 && (int)(y / 64) < g->map.y &&
-			g->map.tab[(int)(y / 64)][(int)(g->player.x / 64)] != '1')
+	if ((int)(y / CUB_SIZE) >= 0 && (int)(y / CUB_SIZE) < g->map.y &&
+		g->map.tab[(int)(y / CUB_SIZE)][(int)(g->player.x / CUB_SIZE)] != '1')
 		g->player.y = y;
 	x = g->player.x + dir * sin(g->player.dir) * SPEED;
-	if ((int)(x / 64) >= 0 && (int)(x / 64) < g->map.x &&
-			g->map.tab[(int)(g->player.y / 64)][(int)(x / 64)] != '1')
+	if ((int)(x / CUB_SIZE) >= 0 && (int)(x / CUB_SIZE) < g->map.x &&
+		g->map.tab[(int)(g->player.y / CUB_SIZE)][(int)(x / CUB_SIZE)] != '1')
 		g->player.x = x;
 }
 
@@ -155,8 +156,8 @@ int		cub_start(t_g *g)
 {
 	g->win.ptr = mlx_new_window(g->mlx, g->win.x, g->win.y, "cub3D");
 	g->img.img = mlx_new_image(g->mlx, g->win.x, g->win.y);
-	g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bpp, &g->img.line_length,
-									&g->img.endian);
+	g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bpp,
+									&g->img.line_length, &g->img.endian);
 	cub_render_next_frame(g);
 	mlx_do_key_autorepeaton(g->mlx);
 	mlx_hook(g->win.ptr, 2, 1L<<0, cub_key, g);
