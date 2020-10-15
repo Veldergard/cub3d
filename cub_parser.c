@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/14 17:52:56 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/15 19:13:04 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,11 @@ int		cub_slablen(char *line)
 
 char	*cub_slab(t_g *g, char *line, int *i)
 {
-	char	*slab;
-	int		j;
+	char		*slab;
+	int			j;
+	t_sprite	*sp;
+	t_list		*sp_node;
+
 
 	if (!(slab = malloc(sizeof(char) * (cub_slablen(line) + 1))))
 		return (NULL);
@@ -139,6 +142,17 @@ char	*cub_slab(t_g *g, char *line, int *i)
 	*i = 0;
 	while (line[*i])
 	{
+		if (line[*i] == '2')
+		{
+			g->spr_cnt += 1;
+			if (!(sp = malloc(sizeof(t_sprite))))
+				return (NULL);
+			sp->x = *i;
+			sp->y = g->map.y;
+			if (!(sp_node = ft_lstnew(sp)))
+				return (NULL);
+			ft_lstadd_back(&(g->sprite_lst), sp_node);
+		}
 		if (line[*i] == '0' || line[*i] == '1' || line[*i] == 'N'
 		|| line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W'
 		|| line[*i] == ' ' || line[*i] == '2')
@@ -211,6 +225,24 @@ static int		parse_line(t_g *g, char *line)
 	return (g->error < 0 ? -1 : 0);
 }
 
+int				cub_sprites_arr(t_g *g)
+{
+	int			i;
+	t_sprite	*temp;
+
+	i = 0;
+	if (!g->sprite_lst)
+		return (1);
+	if (!(g->sprites = malloc(sizeof(t_sprite) * g->spr_cnt + 1)))
+		return (-1);
+	while (1)
+	{
+		temp = (t_sprite*)ft_lstpop_left(&g->sprite_lst);
+
+		free(temp);
+	}
+}
+
 int				cub_parse(char *file, t_g *g)
 {
 	char	*line;
@@ -230,6 +262,7 @@ int				cub_parse(char *file, t_g *g)
 		free(line);
 	}
 	close(fd);
+	cub_sprites_arr(g);
 	if (r < 0)
 		return (0);
 	return (1);

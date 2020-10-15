@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/29 22:27:15 by olaurine          #+#    #+#             */
-/*   Updated: 2020/08/27 01:42:09 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/15 19:07:44 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ int					get_next_line(int fd, char **line);
 int					ft_strcmp(char *s1, char *s2);
 int					ft_num_len(char *s);
 int					ft_atoi_i(const char *nptr, int *i);
+void				*ft_lstpop_left(t_list **lst);
 
 #endif
