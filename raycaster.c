@@ -15,9 +15,10 @@
 void cub_draw_walls(t_g *g)
 {
 	t_wall	wall;
+	int		side;
 
 	wall.r = 0;
-	wall.ray = g->player.dir - 30 * DR;
+	wall.ray = g->player.dir + 30 * DR;
 	wall.ray = wall.ray < 0 ? wall.ray + 2 * PI : wall.ray;
 	wall.ray = wall.ray >= 2 * PI ? wall.ray - 2 * PI : wall.ray;
 	wall.step = 60. * DR / (float)g->win.x;
@@ -109,24 +110,26 @@ void cub_draw_walls(t_g *g)
 		{
 			wall.dis_h = wall.dis_v;
 			wall.text = wall.ray >= PI2 && wall.ray <= PI3 ? &(g->w) : &(g->e);
+			side = wall.ray >= PI2 && wall.ray <= PI3 ? 2 : 0;
 			wall.rx = wall.vy;
 			wall.ry = wall.vy;
 		}
 		else
 		{
 			wall.text = wall.ray >= 0 && wall.ray <= PI ? &(g->n) : &(g->s);
+			side = wall.ray >= 0 && wall.ray <= PI ? 1 : 3 ;
 		}
 		wall.ca = g->player.dir - wall.ray;
 		wall.dis_h = wall.dis_h * cos(wall.ca);
+		g->x_dists[wall.r] = wall.dis_h;
 		wall.line_h = (CUB_SIZE * g->win.y) / wall.dis_h;
 		wall.line_o = 0;
 		if (wall.line_h < g->win.y)
 			wall.line_o = (int)(g->win.y - wall.line_h) / 2;
-		cub_draw_line(g, &wall);
-		wall.ray += wall.step;
+		cub_draw_line(g, &wall, side);
+		wall.ray -= wall.step;
 		wall.ray = wall.ray < 0 ? wall.ray + 2 * PI : wall.ray;
 		wall.ray = wall.ray >= 2 * PI ? wall.ray - 2 * PI : wall.ray;
-		g->x_dists[wall.r] = 2;
 		wall.r++;
 	}
 }

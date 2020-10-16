@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/16 17:15:30 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/16 18:19:09 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,8 +147,8 @@ char	*cub_slab(t_g *g, char *line, int *i)
 			g->spr_cnt += 1;
 			if (!(sp = malloc(sizeof(t_sprite))))
 				return (NULL);
-			sp->x = *i;
-			sp->y = g->map.y;
+			sp->x = (*i + 0.5) * CUB_SIZE;
+			sp->y = (g->map.y + 0.5) * CUB_SIZE;
 			if (!(sp_node = ft_lstnew(sp)))
 				return (NULL);
 			ft_lstadd_back(&(g->sprite_lst), sp_node);
@@ -264,6 +264,7 @@ int				cub_parse(char *file, t_g *g)
 	close(fd);
 	if (!(g->x_dists = malloc(sizeof(float) * g->win.x)))
 		return (0);
+	g->x_dists[g->win.x] = 0;
 	cub_sprites_arr(g);
 	if (r < 0)
 		return (0);

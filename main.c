@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/16 17:09:02 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/16 18:44:27 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	cub_pixel_put(t_g *g, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-int		cub_draw_line(t_g *g, t_wall *wall)
+int		cub_draw_line(t_g *g, t_wall *wall, int side)
 {
 	unsigned int	color;
 	float			img_x;
@@ -39,6 +39,7 @@ int		cub_draw_line(t_g *g, t_wall *wall)
 		(2 * (float)wall->line_h / CUB_SIZE);
 	step_y = ((float)CUB_SIZE) / wall->line_h;
 	img_x = (float)((int)(wall->rx) % CUB_SIZE) / CUB_SIZE * wall->text->hgt;
+	img_x = side == 2 || side == 3 ? CUB_SIZE - img_x : img_x;
 	y = wall->line_o < 0 ? 0 : wall->line_o;
 	while (y < wall->line_h + wall->line_o && y >= 0 && y < g->win.y)
 	{
@@ -52,7 +53,7 @@ int		cub_draw_line(t_g *g, t_wall *wall)
 
 void	cub_rotate(t_g *g, double dir)
 {
-	g->player.dir += dir * R_SPD;
+	g->player.dir -= dir * R_SPD;
 	while (g->player.dir < 0)
 		g->player.dir += 2 * PI;
 	while (g->player.dir > 2 * PI)
@@ -79,11 +80,11 @@ void	cub_strafe(t_g *g, double dir)
 	float	x;
 	float	y;
 
-	y = g->player.y + dir * cos(g->player.dir) * SPEED;
+	y = g->player.y - dir * cos(g->player.dir) * SPEED;
 	if ((int)(y / CUB_SIZE) >= 0 && (int)(y / CUB_SIZE) < g->map.y &&
 		g->map.tab[(int)(y / CUB_SIZE)][(int)(g->player.x / CUB_SIZE)] != '1')
 		g->player.y = y;
-	x = g->player.x + dir * sin(g->player.dir) * SPEED;
+	x = g->player.x - dir * sin(g->player.dir) * SPEED;
 	if ((int)(x / CUB_SIZE) >= 0 && (int)(x / CUB_SIZE) < g->map.x &&
 		g->map.tab[(int)(g->player.y / CUB_SIZE)][(int)(x / CUB_SIZE)] != '1')
 		g->player.x = x;
