@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/15 19:09:33 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/16 17:09:54 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,10 +132,12 @@ typedef struct		s_g
 	t_map			map;
 	t_player		player;
 	void			*mlx;
+	float			*x_dists;
 	t_img			sp;
 	t_list			*sprite_lst;
-	t_sprite		*sprites;
+	t_sprite		**sprites;
 	int				spr_cnt;
+	int				spr_size;
 }					t_g;
 
 int					cub_parse(char *file, t_g *g);
@@ -146,5 +148,9 @@ int					cub_set_player(t_g *g);
 int					cub_check_map(t_g *g);
 void				cub_draw_walls(t_g *g);
 int					cub_draw_line(t_g *g, t_wall *wall);
+float				cub_dist(float ax, float ay, float bx, float by);
+void				cub_draw_sprites(t_g *g);
+float				cub_normalize_rad(float rad);
+void				cub_pixel_put(t_g *g, int x, int y, int color);
 
 #endif

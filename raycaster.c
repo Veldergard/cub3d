@@ -126,6 +126,7 @@ void cub_draw_walls(t_g *g)
 		wall.ray += wall.step;
 		wall.ray = wall.ray < 0 ? wall.ray + 2 * PI : wall.ray;
 		wall.ray = wall.ray >= 2 * PI ? wall.ray - 2 * PI : wall.ray;
+		g->x_dists[wall.r] = 2;
 		wall.r++;
 	}
 }

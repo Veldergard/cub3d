@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/15 16:51:07 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/16 17:09:02 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ int		cub_render_next_frame(t_g *g)
 {
 	cub_clear_scene(g);
 	cub_draw_walls(g);
+	cub_draw_sprites(g);
 	mlx_put_image_to_window(g->mlx, g->win.ptr, g->img.img, 0, 0);
 	mlx_do_sync(g->mlx);
 	return (g->error);

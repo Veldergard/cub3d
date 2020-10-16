@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/15 19:13:04 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/16 17:15:30 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,19 +228,19 @@ static int		parse_line(t_g *g, char *line)
 int				cub_sprites_arr(t_g *g)
 {
 	int			i;
-	t_sprite	*temp;
 
 	i = 0;
 	if (!g->sprite_lst)
 		return (1);
-	if (!(g->sprites = malloc(sizeof(t_sprite) * g->spr_cnt + 1)))
-		return (-1);
-	while (1)
+	if (!(g->sprites = malloc(sizeof(t_sprite*) * g->spr_cnt + 1)))
+		return (0);
+	while (g->sprite_lst)
 	{
-		temp = (t_sprite*)ft_lstpop_left(&g->sprite_lst);
-
-		free(temp);
+		g->sprites[i] = (t_sprite*)ft_lstpop_left(&g->sprite_lst);
+		i++;
 	}
+	g->sprites[i] = 0;
+	return (1);
 }
 
 int				cub_parse(char *file, t_g *g)
@@ -262,6 +262,8 @@ int				cub_parse(char *file, t_g *g)
 		free(line);
 	}
 	close(fd);
+	if (!(g->x_dists = malloc(sizeof(float) * g->win.x)))
+		return (0);
 	cub_sprites_arr(g);
 	if (r < 0)
 		return (0);

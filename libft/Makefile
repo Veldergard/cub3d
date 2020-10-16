@@ -6,7 +6,7 @@
 #    By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/04/30 00:26:54 by olaurine          #+#    #+#              #
-#    Updated: 2020/10/15 19:07:30 by olaurine         ###   ########.fr        #
+#    Updated: 2020/10/16 16:08:55 by olaurine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRC = ft_atoi.c ft_bzero.c ft_calloc.c ft_clean_array.c \
 		ft_strtrim.c ft_substr.c ft_tolower.c ft_toupper.c \
 		ft_abs.c get_next_line.c ft_strcmp.c ft_num_len.c \
 		ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c \
-		ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c
+		ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c \
 		ft_lstpop_left.c
 OBJ = $(patsubst %.c,%.o,$(SRC))
 HEADERS = libft.h
