@@ -32,7 +32,7 @@
 # define R_SPD 0.1
 # define DOF 64
 # define CUB_SIZE 64
-# define FOV 60.F
+# define FOV 1.0471975512F
 
 # ifdef __APPLE__
 

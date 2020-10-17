@@ -24,6 +24,7 @@ void			draw_the_sprite(t_g *g, int y_off, int x_off, float dist)
 	int			i;
 	int			j;
 	uint32_t	color;
+	float 		dst;
 
 	i = (y_off < 0 ? -y_off : 0) - 1;
 	while (++i < g->spr_size)
@@ -33,6 +34,7 @@ void			draw_the_sprite(t_g *g, int y_off, int x_off, float dist)
 		j = (x_off < 0 ? -x_off : 0) - 1;
 		while (++j < g->spr_size)
 		{
+			dst = g->x_dists[x_off + j];
 			if (x_off + j >= g->win.x || dist > g->x_dists[x_off + j])
 				continue;
 			color = get_sprite_image_pixel(g, &g->sp, j, i);
@@ -51,17 +53,18 @@ void			draw_sprite(t_g *g, t_sprite *sprite)
 	int		y_off;
 
 	sprite_dir = atan2f(sprite->y - g->player.y, sprite->x - g->player.x);
-	sprite_dir = cub_normalize_rad(sprite_dir - g->player.dir);
+	sprite_dir = cub_normalize_rad(sprite_dir + g->player.dir);
 	if (sprite_dir > PI)
 		sprite_dir -= 2.F * PI;
 	sprite_dist = cub_dist(g->player.x, g->player.y, sprite->x, sprite->y);
 	size = g->win.x / sprite_dist * CUB_SIZE;
-	if (size > 2 * g->win.x || size > 2 * g->win.y)
+	if (size > 4 * g->win.x || size > 4 * g->win.y)
 		return ;
-	x_off = (sprite_dir * g->win.x / FOV) + (g->win.x - size) / 2;
+	x_off = sprite_dir * g->win.x / FOV + (g->win.x - size) / 2;
 	y_off = (g->win.y - size) / 2;
 	g->spr_size = size;
-	draw_the_sprite(g, y_off, x_off, sprite_dist);
+	if (x_off + size > 0 && x_off - size < g->win.x)
+		draw_the_sprite(g, y_off, x_off, sprite_dist);
 }
 
 void			cub_sort_sprites(t_g *g)
