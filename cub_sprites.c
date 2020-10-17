@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/16 16:14:47 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/16 19:01:37 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/17 15:49:46 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,25 @@ static uint32_t	get_sprite_image_pixel(t_g *g, t_img *img, int x, int y)
 	return (*(uint32_t*)(img->addr + y * img->line_length + x * img->bpp / 8));
 }
 
-void			draw_the_sprite(t_g *g, int v_off, int h_off, float dist)
+void			draw_the_sprite(t_g *g, int y_off, int x_off, float dist)
 {
 	int			i;
 	int			j;
 	uint32_t	color;
 
-	i = (v_off < 0 ? -v_off : 0) - 1;
+	i = (y_off < 0 ? -y_off : 0) - 1;
 	while (++i < g->spr_size)
 	{
-		if (v_off + i >= g->win.y)
+		if (y_off + i >= g->win.y)
 			continue;
-		j = (h_off < 0 ? -h_off : 0) - 1;
+		j = (x_off < 0 ? -x_off : 0) - 1;
 		while (++j < g->spr_size)
 		{
-			if (h_off + j >= g->win.x || dist > g->x_dists[h_off + j])
+			if (x_off + j >= g->win.x || dist > g->x_dists[x_off + j])
 				continue;
 			color = get_sprite_image_pixel(g, &g->sp, j, i);
 			if (color & 0xFFFFFF)
-				cub_pixel_put(g, h_off + j, v_off + i, color);
+				cub_pixel_put(g, x_off + j, y_off + i, color);
 		}
 	}
 }
@@ -47,22 +47,21 @@ void			draw_sprite(t_g *g, t_sprite *sprite)
 	float	sprite_dir;
 	float	sprite_dist;
 	int		size;
-	int		h_off;
-	int		v_off;
+	int		x_off;
+	int		y_off;
 
 	sprite_dir = atan2f(sprite->y - g->player.y, sprite->x - g->player.x);
 	sprite_dir = cub_normalize_rad(sprite_dir - g->player.dir);
 	if (sprite_dir > PI)
 		sprite_dir -= 2.F * PI;
 	sprite_dist = cub_dist(g->player.x, g->player.y, sprite->x, sprite->y);
-	size = g->win.y / sprite_dist * CUB_SIZE;
-	if (size > 4 * g->win.x || size > 4 * g->win.y)
+	size = g->win.x / sprite_dist * CUB_SIZE;
+	if (size > 2 * g->win.x || size > 2 * g->win.y)
 		return ;
-	h_off = sprite_dir * g->win.x / 60. + (g->win.x - size) / 2;
-	v_off = (g->win.y - size) / 2;
+	x_off = (sprite_dir * g->win.x / FOV) + (g->win.x - size) / 2;
+	y_off = (g->win.y - size) / 2;
 	g->spr_size = size;
-	if (h_off + size > 0 && h_off - size < g->win.x)
-		draw_the_sprite(g, v_off, h_off, sprite_dist);
+	draw_the_sprite(g, y_off, x_off, sprite_dist);
 }
 
 void			cub_sort_sprites(t_g *g)

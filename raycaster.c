@@ -18,10 +18,8 @@ void cub_draw_walls(t_g *g)
 	int		side;
 
 	wall.r = 0;
-	wall.ray = g->player.dir + 30 * DR;
-	wall.ray = wall.ray < 0 ? wall.ray + 2 * PI : wall.ray;
-	wall.ray = wall.ray >= 2 * PI ? wall.ray - 2 * PI : wall.ray;
-	wall.step = 60. * DR / (float)g->win.x;
+	wall.ray = cub_normalize_rad(g->player.dir + FOV / 2 * DR);
+	wall.step = FOV * DR / (float)g->win.x;
 	while (wall.r < g->win.x)
 	{
 		wall.dof = 0;
@@ -127,9 +125,7 @@ void cub_draw_walls(t_g *g)
 		if (wall.line_h < g->win.y)
 			wall.line_o = (int)(g->win.y - wall.line_h) / 2;
 		cub_draw_line(g, &wall, side);
-		wall.ray -= wall.step;
-		wall.ray = wall.ray < 0 ? wall.ray + 2 * PI : wall.ray;
-		wall.ray = wall.ray >= 2 * PI ? wall.ray - 2 * PI : wall.ray;
+		wall.ray = cub_normalize_rad(wall.ray - wall.step);
 		wall.r++;
 	}
 }
