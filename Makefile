@@ -6,18 +6,19 @@
 #    By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/21 22:59:15 by olaurine          #+#    #+#              #
-#    Updated: 2020/10/17 14:43:25 by olaurine         ###   ########.fr        #
+#    Updated: 2020/10/19 17:37:53 by olaurine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3D
-SRC = main.c cub_parser.c map_checker.c raycaster.c utils.c cub_sprites.c
+SRC = main.c cub_parser.c map_checker.c raycaster.c utils.c cub_sprites.c \
+	cub_bmp.c
 OBJ = $(patsubst %.c,%.o,$(SRC))
 LIBFT = libft
 CC = gcc
 CFLAGS = -g -Wall -Wextra -Imlx_lnx
-OFLAGS = -Imlx_lnx -Lmlx_lnx -lmlx -L$(LIBFT) -lft -lXext -lX11 -lm -lbsd
-# OFLAGS = -L$(LIBFT) -lft -lm -framework OpenGL -framework AppKit -lmlx
+# OFLAGS = -Imlx_lnx -Lmlx_lnx -lmlx -L$(LIBFT) -lft -lXext -lX11 -lm -lbsd
+OFLAGS = -L$(LIBFT) -lft -lm -framework OpenGL -framework AppKit -lmlx
 
 .PHONY: all clean fclean re
 

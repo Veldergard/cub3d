@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/16 18:44:27 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/19 17:40:09 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,11 +168,6 @@ int		cub_start(t_g *g)
 	return (1);
 }
 
-int		cub_bitmap(t_g *g)
-{
-	return (g->error);
-}
-
 int		cub_init(char *cub, int bmp)
 {
 	t_g		g;
@@ -185,8 +180,8 @@ int		cub_init(char *cub, int bmp)
 	cub_make_sqr_map(&g);
 	cub_set_player(&g);
 	cub_check_map(&g);
-	if (bmp == 1)
-		return (cub_bitmap(&g));
+	if (bmp)
+		return (cub_bmp(&g));
 	cub_start(&g);
 	return (1);
 }
