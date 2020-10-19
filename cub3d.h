@@ -153,7 +153,7 @@ float				cub_dist(float ax, float ay, float bx, float by);
 void				cub_draw_sprites(t_g *g);
 float				cub_normalize_rad(float rad);
 void				cub_pixel_put(t_g *g, int x, int y, int color);
-int					cub_render_next_frame(t_g *g);
+void				cub_draw(t_g *g);
 int					cub_bmp(t_g *g);
 
 #endif

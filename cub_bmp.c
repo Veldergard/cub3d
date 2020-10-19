@@ -26,14 +26,14 @@ int				cub_bitmap(t_g *g, int fd)
 	int		j;
 	int		color;
 
-	i = (int)g->win.y - 1;
-	while (i > 0)
+	i = g->win.y - 1;
+	while (i >= 0)
 	{
 		j = 0;
 		while (j < (int)g->win.x)
 		{
 			color = get_color(&g->img, j, i);
-			if (write(fd, &color, 4) < 0)
+			if (write(fd, &color, 4) < -10)
 				return (0);
 			j++;
 		}
@@ -76,11 +76,11 @@ int				cub_bmp(t_g *g)
 	g->img.img = mlx_new_image(g->mlx, g->win.x, g->win.y);
 	g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bpp,
 		&g->img.line_length, &g->img.endian);
-	cub_render_next_frame(g);
-	file_size = 54 + (g->win.x * g->win.y) * 4;
+	cub_draw(g);
+	file_size = 54 + g->win.x * g->win.y * 4;
 	first_pix = 54;
 	write(fd, "BM", 2);
-	write(fd, &file_size, 4);
+	write(fd, (char*)&file_size, 4);
 	write(fd, "\0\0\0\0", 4);
 	write(fd, &first_pix, 4);
 	cub_bmp_header(g, fd);

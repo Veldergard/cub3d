@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/19 17:40:09 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/19 17:42:55 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,11 +124,16 @@ void	cub_clear_scene(t_g *g)
 	}
 }
 
-int		cub_render_next_frame(t_g *g)
+void	cub_draw(t_g *g)
 {
 	cub_clear_scene(g);
 	cub_draw_walls(g);
 	cub_draw_sprites(g);
+}
+
+int		cub_render_next_frame(t_g *g)
+{
+	cub_draw(g);
 	mlx_put_image_to_window(g->mlx, g->win.ptr, g->img.img, 0, 0);
 	mlx_do_sync(g->mlx);
 	return (g->error);
@@ -188,7 +193,7 @@ int		cub_init(char *cub, int bmp)
 
 int		main(int ac, char **av)
 {
-	if (ac == 3 && ft_strcmp(av[2], "--save"))
+	if (ac == 3 && !ft_strcmp(av[2], "--save"))
 		cub_init(av[1], 1);
 	else if (ac == 2)
 		cub_init(av[1], 0);
