@@ -27,18 +27,16 @@ void	cub_free_map(t_g *g)
 
 void	cub_free(t_g *g)
 {
-	if (g->map.tab)
-		cub_free_map(g);
-	if (g->so_tex.image)
-		mlx_destroy_image(game->mlx, game->so_tex.image);
-	if (g->no_tex.image)
-		mlx_destroy_image(game->mlx, game->no_tex.image);
-	if (g->ea_tex.image)
-		mlx_destroy_image(game->mlx, game->ea_tex.image);
-	if (g->we_tex.image)
-		mlx_destroy_image(game->mlx, game->we_tex.image);
-	if (g->sprite.image)
-		mlx_destroy_image(game->mlx, game->sprite.image);
+	if (g->s.img)
+		mlx_destroy_image(g->mlx, g->s.img);
+	if (g->n.img)
+		mlx_destroy_image(g->mlx, g->n.img);
+	if (g->e.img)
+		mlx_destroy_image(g->mlx, g->e.img);
+	if (g->w.img)
+		mlx_destroy_image(g->mlx, g->w.img);
+	if (g->sp.img)
+		mlx_destroy_image(g->mlx, g->sp.img);
 	if (g->sprites)
 		free(game->sprites);
 	if (g->x_dists)
@@ -49,5 +47,19 @@ void	cub_free(t_g *g)
 
 void	cub_exit(t_g *g, int status, char *msg)
 {
+	if (g->img.img)
+		mlx_destroy_image(g->mlx, g->img.img);
+	if (g->win.ptr && status != -1)
+		mlx_destroy_window(g->mlx, g->win.ptr);
+	if (g->map.tab)
+		cub_free_map(g);
+	cub_free(g);
+	ft_bzero(game, sizeof(*game));
+	if (status > 0)
+	{
+		ft_putendl_fd("Error!", 2);
+		if (msg)
+			ft_putendl_fd(msg, 2);
+	}
 	exit(status < 0 ? 0 : status);
 }
