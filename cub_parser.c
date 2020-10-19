@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/16 18:19:09 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/19 20:01:35 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,11 @@ int		cub_xpm(t_g *g, t_img *adr, char *file)
 		return (-1);
 	errno = 0;
 	if ((fd = open(file, O_RDONLY)) == -1 || errno)
-		return (-1);
+		cub_exit (g, -1, "File not found");
 	close(fd);
 	adr->img = mlx_xpm_file_to_image(g->mlx, file, &(adr->wdt), &(adr->hgt));
-	if (adr->img == NULL || adr->wdt != 64 || adr->hgt != 64)
-		return (-1);
+	if (adr->img == NULL)
+		cub_exit(g, -1, "Texture error");
 	adr->addr = mlx_get_data_addr(adr->img, &(adr->bpp), &(adr->line_length), &(adr->endian));
 	return (0);
 }
@@ -101,7 +101,7 @@ int		parse_texture(t_g *g, t_img *adr, char *line, int *i)
 	while (line[j] != ' ' && line[j])
 		j++;
 	if (!(file = malloc(j - (*i) + 1)))
-		return (-8);
+		cub_exit(g, -1, "malloc Error!");
 	j = 0;
 	while (line[*i] != ' ' && line[*i] != '\0')
 		file[j++] = line[(*i)++];
@@ -146,11 +146,11 @@ char	*cub_slab(t_g *g, char *line, int *i)
 		{
 			g->spr_cnt += 1;
 			if (!(sp = malloc(sizeof(t_sprite))))
-				return (NULL);
+				cub_exit (g, -1, "malloc Error!");
 			sp->x = (*i + 0.5) * CUB_SIZE;
 			sp->y = (g->map.y + 0.5) * CUB_SIZE;
 			if (!(sp_node = ft_lstnew(sp)))
-				return (NULL);
+				cub_exit (g, -1, "malloc Error!");
 			ft_lstadd_back(&(g->sprite_lst), sp_node);
 		}
 		if (line[*i] == '0' || line[*i] == '1' || line[*i] == 'N'
@@ -263,7 +263,7 @@ int				cub_parse(char *file, t_g *g)
 	}
 	close(fd);
 	if (!(g->x_dists = malloc(sizeof(float) * g->win.x)))
-		return (0);
+		cub_exit(g, "lol");
 	g->x_dists[g->win.x] = 0;
 	cub_sprites_arr(g);
 	if (r < 0)
