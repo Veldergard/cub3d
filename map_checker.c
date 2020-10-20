@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 19:58:33 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 18:07:38 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 19:09:08 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ int		cub_set_player(t_g *g)
 		}
 		i++;
 	}
+	if (g->player.chr == 0)
+		return (0);
 	return (1);
 }
 
@@ -120,14 +122,17 @@ int		cub_check_map(t_g *g)
 		{
 			if (g->map.tab[i][j] == ' ')
 			{
+				if ((j == 0 && g->map.tab[i][j] == '0') ||
+					(i == 0 && g->map.tab[i][j] == '0'))
+					return (0);
 				if ((j > 0 && (g->map.tab[i][j - 1] != ' ' ||
-				g->map.tab[i][j - 1] != '1')) ||
-				(g->map.tab[i][j + 1] != ' ' ||	g->map.tab[i][j + 1] != 0
-				|| g->map.tab[i][j + 1] != '1') || (g->map.tab[i + 1] &&
-				(g->map.tab[i + 1][j] != '1' ||
-				g->map.tab[i + 1][j] != ' ')) || (i > 0 &&
-				(g->map.tab[i - 1][j] != '1' ||
-				g->map.tab[i - 1][j] != ' ')))
+					g->map.tab[i][j - 1] != '1')) ||
+					(g->map.tab[i][j + 1] != ' ' ||	g->map.tab[i][j + 1] != '0'
+					|| g->map.tab[i][j + 1] != '1') || (g->map.tab[i + 1] &&
+					(g->map.tab[i + 1][j] != '1' ||
+					g->map.tab[i + 1][j] != ' ')) || (i > 0 &&
+					(g->map.tab[i - 1][j] != '1' ||
+					g->map.tab[i - 1][j] != ' ')))
 					return (0);
 			}
 		}

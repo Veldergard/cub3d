@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 18:09:19 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 19:14:04 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,9 +179,12 @@ void	cub_init(char *cub, int bmp)
 	g.floor = NONE;
 	g.mlx = mlx_init();
 	cub_parse(cub, &g);
-	cub_make_sqr_map(&g);
-	cub_set_player(&g);
-	cub_check_map(&g);
+	if (!(cub_make_sqr_map(&g)))
+		cub_exit(&g, -1, "Malloc error!");
+	if (!(cub_set_player(&g)))
+		cub_exit(&g, -1, "Player setting error!");
+	if (!(cub_check_map(&g)))
+		cub_exit(&g, -1, "Map error!");
 	if (bmp)
 		cub_bmp(&g);
 	else
@@ -195,6 +198,6 @@ int		main(int ac, char **av)
 	else if (ac == 2)
 		cub_init(av[1], 0);
 	else
-		write(2, "Error : Invalid arguments\n", 26);
+		write(2, "Error\n Invalid arguments!\n", 26);
 	return (0);
 }

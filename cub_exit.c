@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 19:01:28 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 18:06:49 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 19:04:11 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	cub_exit(t_g *g, int status, char *msg)
 	ft_bzero(g, sizeof(*g));
 	if (status == -1)
 	{
-		ft_putendl_fd("Error!", 2);
+		ft_putendl_fd("Error", 2);
 		if (msg)
 			ft_putendl_fd(msg, 2);
 	}
