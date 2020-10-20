@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 16:38:26 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 16:54:59 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 17:32:25 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void			cub_bmp_header(t_g *g, int fd)
 	}
 }
 
-int				cub_bmp(t_g *g)
+void			cub_bmp(t_g *g)
 {
 	int		fd;
 	int		file_size;

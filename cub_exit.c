@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 19:01:28 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 16:29:44 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 18:06:49 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	cub_free(t_g *g)
 	if (g->x_dists)
 		free(g->x_dists);
 	if (g->mlx)
-		free (g->mlx);
+		free(g->mlx);
 }
 
 void	cub_exit(t_g *g, int status, char *msg)
@@ -71,7 +71,7 @@ void	cub_exit(t_g *g, int status, char *msg)
 		mlx_destroy_window(g->mlx, g->win.ptr);
 	cub_free(g);
 	ft_bzero(g, sizeof(*g));
-	if (status > 0)
+	if (status == -1)
 	{
 		ft_putendl_fd("Error!", 2);
 		if (msg)

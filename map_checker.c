@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 19:58:33 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/13 17:58:55 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 18:07:38 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 char	*cub_make_str(t_g *g, int i)
 {
-	char *s;
-	int j;
+	char	*s;
+	int		j;
 
 	if (!(s = malloc(g->map.x + 1)))
 		return (NULL);

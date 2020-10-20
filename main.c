@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/19 17:42:55 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 18:09:19 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	cub_pixel_put(t_g *g, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-int		cub_draw_line(t_g *g, t_wall *wall, int side)
+void	cub_draw_line(t_g *g, t_wall *wall, int side)
 {
 	unsigned int	color;
 	float			img_x;
@@ -48,7 +48,6 @@ int		cub_draw_line(t_g *g, t_wall *wall, int side)
 		img_y += step_y;
 		y++;
 	}
-	return (1);
 }
 
 void	cub_rotate(t_g *g, double dir)
@@ -92,8 +91,8 @@ void	cub_strafe(t_g *g, double dir)
 
 int		cub_close(t_g *g)
 {
-	exit(0);
-	return (g->error);
+	cub_exit(g, 1, NULL);
+	return (1);
 }
 
 void	cub_clear_scene(t_g *g)
@@ -131,12 +130,11 @@ void	cub_draw(t_g *g)
 	cub_draw_sprites(g);
 }
 
-int		cub_render_next_frame(t_g *g)
+void	cub_render_next_frame(t_g *g)
 {
 	cub_draw(g);
 	mlx_put_image_to_window(g->mlx, g->win.ptr, g->img.img, 0, 0);
 	mlx_do_sync(g->mlx);
-	return (g->error);
 }
 
 int		cub_key(int key, t_g *g)
@@ -159,7 +157,7 @@ int		cub_key(int key, t_g *g)
 	return (1);
 }
 
-int		cub_start(t_g *g)
+void	cub_start(t_g *g)
 {
 	g->win.ptr = mlx_new_window(g->mlx, g->win.x, g->win.y, "cub3D");
 	g->img.img = mlx_new_image(g->mlx, g->win.x, g->win.y);
@@ -170,10 +168,9 @@ int		cub_start(t_g *g)
 	mlx_hook(g->win.ptr, 2, 1L<<0, cub_key, g);
 	mlx_hook(g->win.ptr, 17, 1L<<17, cub_close, g);
 	mlx_loop(g->mlx);
-	return (1);
 }
 
-int		cub_init(char *cub, int bmp)
+void	cub_init(char *cub, int bmp)
 {
 	t_g		g;
 
@@ -186,9 +183,9 @@ int		cub_init(char *cub, int bmp)
 	cub_set_player(&g);
 	cub_check_map(&g);
 	if (bmp)
-		return (cub_bmp(&g));
-	cub_start(&g);
-	return (1);
+		cub_bmp(&g);
+	else
+		cub_start(&g);
 }
 
 int		main(int ac, char **av)

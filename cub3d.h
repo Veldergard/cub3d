@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 15:44:57 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 18:01:51 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ typedef struct		s_map
 
 typedef struct		s_win
 {
-	int				x; // width of window
-	int				y; // height of window
+	int				x;
+	int				y;
 	void			*ptr;
 }					t_win;
 
@@ -125,13 +125,12 @@ typedef struct		s_g
 {
 	t_win			win;
 	t_img			img;
-	unsigned int	floor; //floor color
-	unsigned int	ceiling; // ceiling color
+	unsigned int	floor;
+	unsigned int	ceiling;
 	t_img			n;
 	t_img			s;
 	t_img			e;
 	t_img			w;
-	int				error; // error code
 	t_map			map;
 	t_player		player;
 	void			*mlx;
@@ -143,20 +142,20 @@ typedef struct		s_g
 	int				spr_size;
 }					t_g;
 
-int					cub_parse(char *file, t_g *g);
+void				cub_parse(char *file, t_g *g);
 char				*cub_make_str(t_g *g, int i);
 int					cub_make_sqr_map(t_g *g);
 void				cub_set_dir(t_g *g, char c);
 int					cub_set_player(t_g *g);
 int					cub_check_map(t_g *g);
 void				cub_draw_walls(t_g *g);
-int					cub_draw_line(t_g *g, t_wall *wall, int side);
+void				cub_draw_line(t_g *g, t_wall *wall, int side);
 float				cub_dist(float ax, float ay, float bx, float by);
 void				cub_draw_sprites(t_g *g);
 float				cub_normalize_rad(float rad);
 void				cub_pixel_put(t_g *g, int x, int y, int color);
 void				cub_draw(t_g *g);
-int					cub_bmp(t_g *g);
+void				cub_bmp(t_g *g);
 void				cub_exit(t_g *g, int status, char *msg);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 16:52:24 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 17:53:20 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,6 @@ void		parse_map(t_g *g, char *line, int *i)
 	char	**tmp;
 	int		j;
 
-	g->error = 1;
 	if (!(tmp = malloc(sizeof(char*) * (g->map.y + 2))))
 		cub_exit(g, -1, "Malloc error!");
 	j = -1;
@@ -266,9 +265,11 @@ void		cub_parse(char *file, t_g *g)
 	while (r == 1)
 	{
 		r = get_next_line(fd, &line);
-		if (r == 1)
+		if (r == 1 || r == 0)
+		{
 			parse_line(g, line);
-		free(line);
+			free(line);
+		}
 	}
 	close(fd);
 	if (!(g->x_dists = malloc(sizeof(float) * g->win.x)))
