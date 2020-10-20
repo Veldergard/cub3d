@@ -6,13 +6,13 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 20:30:47 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 19:44:24 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 19:51:02 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void cub_draw_walls(t_g *g)
+void	cub_draw_walls(t_g *g)
 {
 	t_wall	wall;
 	int		side;
@@ -53,7 +53,8 @@ void cub_draw_walls(t_g *g)
 			wall.my < g->map.y && g->map.tab[wall.my][wall.mx] == '1')
 			{
 				wall.dof = DOF;
-				wall.dis_v = cos(wall.ray) * (wall.rx - g->player.x) - sin(wall.ray) * (wall.ry - g->player.y);
+				wall.dis_v = cos(wall.ray) * (wall.rx - g->player.x) -
+					sin(wall.ray) * (wall.ry - g->player.y);
 			}
 			else
 			{
@@ -95,7 +96,8 @@ void cub_draw_walls(t_g *g)
 			wall.my < g->map.y && g->map.tab[wall.my][wall.mx] == '1')
 			{
 				wall.dof = DOF;
-				wall.dis_h = cos(wall.ray) * (wall.rx - g->player.x) - sin(wall.ray) * (wall.ry - g->player.y);
+				wall.dis_h = cos(wall.ray) * (wall.rx - g->player.x) -
+					sin(wall.ray) * (wall.ry - g->player.y);
 			}
 			else
 			{
@@ -115,7 +117,7 @@ void cub_draw_walls(t_g *g)
 		else
 		{
 			wall.text = wall.ray >= 0 && wall.ray <= PI ? &(g->n) : &(g->s);
-			side = wall.ray >= 0 && wall.ray <= PI ? 1 : 3 ;
+			side = wall.ray >= 0 && wall.ray <= PI ? 1 : 3;
 		}
 		wall.ca = g->player.dir - wall.ray;
 		wall.dis_h = wall.dis_h * cos(wall.ca);
