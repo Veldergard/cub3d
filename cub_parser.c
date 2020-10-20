@@ -6,18 +6,11 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 17:53:20 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 19:40:01 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-int			skip_spaces(char *line, int *i)
-{
-	while (line && ((line[*i] >= 9 && line[*i] <= 13) || line[*i] == 32))
-		(*i)++;
-	return (1);
-}
 
 void		parse_resolution(t_g *g, char *line, int *i)
 {
@@ -56,161 +49,12 @@ void		parse_color(t_g *game, unsigned int *color, char *line, int *i)
 	*color = r * 256 * 256 + g * 256 + b;
 }
 
-int			check_ending(char *file, char *ext)
-{
-	int	i;
-
-	i = 0;
-	while (file[i])
-		i++;
-	if ((i > 4 && file[i - 1] == ext[2] && file[i - 2] == ext[1])
-		&& (file[i - 3] == ext[0] && file[i - 4] == '.'))
-		return (1);
-	return (0);
-}
-
-void		cub_xpm(t_g *g, t_img *adr, char *file)
-{
-	int		fd;
-
-	if (!check_ending(file, "xpm"))
-	{
-		free(file);
-		cub_exit (g, -1, "File type error!");
-	}
-	errno = 0;
-	if ((fd = open(file, O_RDONLY)) == -1 || errno)
-	{
-		free(file);
-		cub_exit (g, -1, "File not found!");
-	}
-	close(fd);
-	adr->img = mlx_xpm_file_to_image(g->mlx, file, &(adr->wdt), &(adr->hgt));
-	if (adr->img == NULL)
-	{
-		free(file);
-		cub_exit(g, -1, "Texture setting error!");
-	}
-	adr->addr = mlx_get_data_addr(adr->img, &(adr->bpp), &(adr->line_length), &(adr->endian));
-}
-
-void		parse_texture(t_g *g, t_img *adr, char *line, int *i)
-{
-	char	*file;
-	int		j;
-
-	if (adr->addr)
-		cub_exit(g, -1, "Texture setting error!");
-	(*i) += 2;
-	skip_spaces(line, i);
-	j = *i;
-	while (line[j] != ' ' && line[j])
-		j++;
-	if (!(file = malloc(j - (*i) + 1)))
-		cub_exit(g, -1, "Malloc error!");
-	j = 0;
-	while (line[*i] != ' ' && line[*i] != '\0')
-		file[j++] = line[(*i)++];
-	file[j] = '\0';
-	cub_xpm(g, adr, file);
-	free(file);
-}
-
-int			cub_slablen(char *line)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (line[i])
-	{
-		if (line[i] == '0' || line[i] == '1' || line[i] == '2' || line[i] == ' '
-		|| line[i] == 'N' || line[i] == 'S' || line[i] == 'W' || line[i] == 'E')
-			count++;
-		i++;
-	}
-	return (count);
-}
-
-char		*cub_slab(t_g *g, char *line, int *i)
-{
-	char		*slab;
-	int			j;
-	t_sprite	*sp;
-	t_list		*sp_node;
-
-
-	if (!(slab = malloc(sizeof(char) * (cub_slablen(line) + 1))))
-		return (NULL);
-	j = 0;
-	*i = 0;
-	while (line[*i])
-	{
-		if (line[*i] == '2')
-		{
-			g->spr_cnt += 1;
-			if (!(sp = malloc(sizeof(t_sprite))))
-			{
-				free(slab);
-				return (NULL);
-			}
-			sp->x = (*i + 0.5) * CUB_SIZE;
-			sp->y = (g->map.y + 0.5) * CUB_SIZE;
-			if (!(sp_node = ft_lstnew(sp)))
-			{
-				free(sp);
-				free(slab);
-				return (NULL);
-			}
-			ft_lstadd_back(&(g->sprite_lst), sp_node);
-		}
-		if (line[*i] == '0' || line[*i] == '1' || line[*i] == 'N'
-		|| line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W'
-		|| line[*i] == ' ' || line[*i] == '2')
-			slab[j++] = line[*i];
-		else
-		{
-			free(slab);
-			return (NULL);
-		}
-		(*i)++;
-	}
-	if (j > g->map.x)
-		g->map.x = j;
-	slab[j] = '\0';
-	return (slab);
-}
-
-void		parse_map(t_g *g, char *line, int *i)
-{
-	char	**tmp;
-	int		j;
-
-	if (!(tmp = malloc(sizeof(char*) * (g->map.y + 2))))
-		cub_exit(g, -1, "Malloc error!");
-	j = -1;
-	while (++j < g->map.y)
-		tmp[j] = g->map.tab[j];
-	if ((tmp[g->map.y] = cub_slab(g, line, i)) == NULL)
-	{
-		free(tmp);
-		cub_exit(g, -1, "Malloc error!");
-	}
-	tmp[g->map.y + 1] = NULL;
-	if (g->map.y > 0)
-		free(g->map.tab);
-	g->map.tab = tmp;
-	g->map.y++;
-}
-
 void		parse_line(t_g *g, char *line)
 {
 	int i;
 
 	i = 0;
-	skip_spaces(line, &i);
-	if (!line || !*line)
+	if (skip_spaces(line, &i) && (!line || !*line))
 		return ;
 	if (line[i] == '1')
 		parse_map(g, line, &i);

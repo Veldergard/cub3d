@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/16 16:14:47 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/17 15:49:46 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 19:32:45 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void			draw_the_sprite(t_g *g, int y_off, int x_off, float dist)
 	int			i;
 	int			j;
 	uint32_t	color;
-	float 		dst;
+	float		dst;
 
 	i = (y_off < 0 ? -y_off : 0) - 1;
 	while (++i < g->spr_size)

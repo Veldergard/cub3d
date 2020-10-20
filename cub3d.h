@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 18:01:51 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 19:41:34 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,5 +157,8 @@ void				cub_pixel_put(t_g *g, int x, int y, int color);
 void				cub_draw(t_g *g);
 void				cub_bmp(t_g *g);
 void				cub_exit(t_g *g, int status, char *msg);
+int					skip_spaces(char *line, int *i);
+void				parse_texture(t_g *g, t_img *adr, char *line, int *i);
+void				parse_map(t_g *g, char *line, int *i);
 
 #endif

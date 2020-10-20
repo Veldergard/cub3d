@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 19:14:04 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 19:45:39 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,8 +165,8 @@ void	cub_start(t_g *g)
 									&g->img.line_length, &g->img.endian);
 	cub_render_next_frame(g);
 	mlx_do_key_autorepeaton(g->mlx);
-	mlx_hook(g->win.ptr, 2, 1L<<0, cub_key, g);
-	mlx_hook(g->win.ptr, 17, 1L<<17, cub_close, g);
+	mlx_hook(g->win.ptr, 2, 1L << 0, cub_key, g);
+	mlx_hook(g->win.ptr, 17, 1L << 17, cub_close, g);
 	mlx_loop(g->mlx);
 }
 
