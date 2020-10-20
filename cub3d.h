@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/19 19:53:00 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 15:44:57 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,6 @@ float				cub_normalize_rad(float rad);
 void				cub_pixel_put(t_g *g, int x, int y, int color);
 void				cub_draw(t_g *g);
 int					cub_bmp(t_g *g);
-void				cub_exit(t_g *g, int status, int error);
+void				cub_exit(t_g *g, int status, char *msg);
 
 #endif
