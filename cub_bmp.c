@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 16:38:26 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/19 17:35:13 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/20 16:54:59 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ unsigned int	get_color(t_img *i, int x, int y)
 	return (*(unsigned int*)dst);
 }
 
-int				cub_bitmap(t_g *g, int fd)
+void			cub_bitmap(t_g *g, int fd)
 {
 	int		i;
 	int		j;
@@ -33,13 +33,12 @@ int				cub_bitmap(t_g *g, int fd)
 		while (j < (int)g->win.x)
 		{
 			color = get_color(&g->img, j, i);
-			if (write(fd, &color, 4) < -10)
-				return (0);
+			if (write(fd, &color, 4) < 0)
+				cub_exit(g, -1, "File writing error!");
 			j++;
 		}
 		i--;
 	}
-	return (1);
 }
 
 void			cub_bmp_header(t_g *g, int fd)
@@ -72,7 +71,7 @@ int				cub_bmp(t_g *g)
 	int		first_pix;
 
 	if ((fd = open("save.bmp", O_CREAT | O_WRONLY | O_TRUNC, 0755)) < 0)
-		return (9);
+		cub_exit(g, -1, "File open error!");
 	g->img.img = mlx_new_image(g->mlx, g->win.x, g->win.y);
 	g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bpp,
 		&g->img.line_length, &g->img.endian);
@@ -86,5 +85,4 @@ int				cub_bmp(t_g *g)
 	cub_bmp_header(g, fd);
 	cub_bitmap(g, fd);
 	close(fd);
-	return (1);
 }
