@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 19:39:37 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 16:26:05 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 16:42:09 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void			cub_parse_texture(t_g *g, t_img *adr, char *line, int *i)
 	if (adr->addr)
 		cub_exit(g, -1, "Texture setting error!");
 	(*i) += 2;
-	skip_spaces(line, i);
+	cub_skip_spaces(line, i);
 	j = *i;
 	while (line[j] != ' ' && line[j])
 		j++;

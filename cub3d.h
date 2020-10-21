@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 16:24:21 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 16:50:03 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,11 +148,9 @@ int					cub_make_sqr_map(t_g *g);
 int					cub_set_player(t_g *g);
 int					cub_check_map(t_g *g);
 void				cub_draw_walls(t_g *g);
-void				cub_draw_line(t_g *g, t_wall *wall, int side);
 float				cub_dist(float ax, float ay, float bx, float by);
 void				cub_draw_sprites(t_g *g);
 float				cub_normalize_rad(float rad);
-void				cub_pixel_put(t_g *g, int x, int y, int color);
 void				cub_draw(t_g *g);
 void				cub_bmp(t_g *g);
 void				cub_exit(t_g *g, int status, char *msg);
@@ -161,5 +159,10 @@ void				cub_parse_texture(t_g *g, t_img *adr, char *line, int *i);
 void				cub_parse_map(t_g *g, char *line, int *i);
 int					cub_check_cell(t_g *g, int y, int x);
 int					cub_check_params(t_g *g);
+int					cub_close(t_g *g);
+int					cub_key(int key, t_g *g);
+void				cub_render_next_frame(t_g *g);
+void				cub_draw_line(t_g *g, t_wall *wall, int side);
+void				cub_pixel_put(t_g *g, int x, int y, int color);
 
 #endif
