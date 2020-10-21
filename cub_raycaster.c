@@ -6,17 +6,14 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 20:30:47 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 16:57:49 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 17:07:50 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	cub_raycaster(t_g *g, t_wall *wall, int *side)
+static void		cub_set_vertical(t_g *g, t_wall *wall)
 {
-	wall->dof = 0;
-	wall->dis_v = 100000;
-	wall->m_tan = tan(wall->ray);
 	if (cos(wall->ray) > 0.001)
 	{
 		wall->rx = (((int)g->player.x >> 6) << 6) + 64;
@@ -37,6 +34,14 @@ void	cub_raycaster(t_g *g, t_wall *wall, int *side)
 		wall->ry = g->player.y;
 		wall->dof = DOF;
 	}
+}
+
+static void		cub_check_vertical(t_g *g, t_wall *wall)
+{
+	wall->dof = 0;
+	wall->dis_v = 100000;
+	wall->m_tan = tan(wall->ray);
+	cub_set_vertical(g, wall);
 	while (wall->dof < DOF)
 	{
 		wall->mx = (int)(wall->rx) >> 6;
@@ -57,9 +62,10 @@ void	cub_raycaster(t_g *g, t_wall *wall, int *side)
 	}
 	wall->vx = wall->rx;
 	wall->vy = wall->ry;
-	wall->dof = 0;
-	wall->dis_h = 100000;
-	wall->m_tan = 1.0 / wall->m_tan;
+}
+
+static void		cub_set_horizontal(t_g *g, t_wall *wall)
+{
 	if (sin(wall->ray) > 0.001)
 	{
 		wall->ry = (((int)g->player.y >> 6) << 6) - 0.0001;
@@ -80,6 +86,14 @@ void	cub_raycaster(t_g *g, t_wall *wall, int *side)
 		wall->ry = g->player.y;
 		wall->dof = DOF;
 	}
+}
+
+static void		cub_check_horizontal(t_g *g, t_wall *wall)
+{
+	wall->dof = 0;
+	wall->dis_h = 100000;
+	wall->m_tan = 1.0 / wall->m_tan;
+	cub_set_horizontal(g, wall);
 	while (wall->dof < DOF)
 	{
 		wall->mx = (int)(wall->rx) >> 6;
@@ -98,6 +112,12 @@ void	cub_raycaster(t_g *g, t_wall *wall, int *side)
 			wall->dof += 1;
 		}
 	}
+}
+
+void			cub_raycaster(t_g *g, t_wall *wall, int *side)
+{
+	cub_check_vertical(g, wall);
+	cub_check_horizontal(g, wall);
 	if (wall->dis_v < wall->dis_h)
 	{
 		wall->dis_h = wall->dis_v;
@@ -110,29 +130,5 @@ void	cub_raycaster(t_g *g, t_wall *wall, int *side)
 	{
 		wall->text = wall->ray >= 0 && wall->ray <= PI ? &(g->n) : &(g->s);
 		*side = wall->ray >= 0 && wall->ray <= PI ? 1 : 3;
-	}
-}
-
-void	cub_draw_walls(t_g *g)
-{
-	t_wall	wall;
-	int		side;
-
-	wall.r = 0;
-	wall.ray = cub_normalize_rad(g->player.dir + FOV / 2);
-	wall.step = FOV / (float)g->win.x;
-	while (wall.r < g->win.x)
-	{
-		cub_raycaster(g, &wall, &side);
-		wall.ca = g->player.dir - wall.ray;
-		wall.dis_h = wall.dis_h * cos(wall.ca);
-		g->x_dists[wall.r] = wall.dis_h;
-		wall.line_h = (CUB_SIZE * g->win.y) / wall.dis_h;
-		wall.line_o = 0;
-		if (wall.line_h < g->win.y)
-			wall.line_o = (int)(g->win.y - wall.line_h) / 2;
-		cub_draw_line(g, &wall, side);
-		wall.ray = cub_normalize_rad(wall.ray - wall.step);
-		wall.r++;
 	}
 }

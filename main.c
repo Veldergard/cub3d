@@ -6,20 +6,44 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:09:11 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 16:46:25 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 17:08:29 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	cub_render_next_frame(t_g *g)
+void			cub_draw_walls(t_g *g)
+{
+	t_wall	wall;
+	int		side;
+
+	wall.r = 0;
+	wall.ray = cub_normalize_rad(g->player.dir + FOV / 2);
+	wall.step = FOV / (float)g->win.x;
+	while (wall.r < g->win.x)
+	{
+		cub_raycaster(g, &wall, &side);
+		wall.ca = g->player.dir - wall.ray;
+		wall.dis_h = wall.dis_h * cos(wall.ca);
+		g->x_dists[wall.r] = wall.dis_h;
+		wall.line_h = (CUB_SIZE * g->win.y) / wall.dis_h;
+		wall.line_o = 0;
+		if (wall.line_h < g->win.y)
+			wall.line_o = (int)(g->win.y - wall.line_h) / 2;
+		cub_draw_line(g, &wall, side);
+		wall.ray = cub_normalize_rad(wall.ray - wall.step);
+		wall.r++;
+	}
+}
+
+void			cub_render_next_frame(t_g *g)
 {
 	cub_draw(g);
 	mlx_put_image_to_window(g->mlx, g->win.ptr, g->img.img, 0, 0);
 	mlx_do_sync(g->mlx);
 }
 
-void	cub_start(t_g *g)
+static void		cub_start(t_g *g)
 {
 	g->win.ptr = mlx_new_window(g->mlx, g->win.x, g->win.y, "cub3D");
 	g->img.img = mlx_new_image(g->mlx, g->win.x, g->win.y);
@@ -32,7 +56,7 @@ void	cub_start(t_g *g)
 	mlx_loop(g->mlx);
 }
 
-void	cub_init(char *cub, int bmp)
+static void		cub_init(char *cub, int bmp)
 {
 	t_g		g;
 
@@ -53,7 +77,7 @@ void	cub_init(char *cub, int bmp)
 		cub_start(&g);
 }
 
-int		main(int ac, char **av)
+int				main(int ac, char **av)
 {
 	if (ac == 3 && !ft_strcmp(av[2], "--save"))
 		cub_init(av[1], 1);
