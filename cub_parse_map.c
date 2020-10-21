@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 19:37:21 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 19:37:42 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 14:43:17 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,50 +29,64 @@ int			cub_slablen(char *line)
 	return (count);
 }
 
+int			cub_add_sprite(t_g *g, int *i, char *line)
+{
+	t_sprite	*sp;
+	t_list		*sp_node;
+
+	if (line[*i] == 2)
+	{
+		g->spr_cnt += 1;
+		if (!(sp = malloc(sizeof(t_sprite))))
+		{
+			return (0);
+		}
+		sp->x = (*i + 0.5) * CUB_SIZE;
+		sp->y = (g->map.y + 0.5) * CUB_SIZE;
+		if (!(sp_node = ft_lstnew(sp)))
+		{
+			free(sp);
+			return (0);
+		}
+		ft_lstadd_back(&(g->sprite_lst), sp_node);
+	}
+	return (1);
+}
+
+int			cub_check_map_chr(char *line, int *i)
+{
+	if (line[*i] == '0' || line[*i] == '1' || line[*i] == 'N'
+		|| line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W'
+		|| line[*i] == ' ' || line[*i] == '2')
+		return (1);
+	return (0);
+}
+
 char		*cub_slab(t_g *g, char *line, int *i)
 {
 	char		*slab;
 	int			j;
-	t_sprite	*sp;
-	t_list		*sp_node;
 
 	if (!(slab = malloc(sizeof(char) * (cub_slablen(line) + 1))))
 		return (NULL);
 	j = 0;
-	*i = 0;
-	while (line[*i])
+	*i = -1;
+	while (line[++(*i)])
 	{
-		if (line[*i] == '2')
+		if (!(cub_add_sprite(g, i, line)))
 		{
-			g->spr_cnt += 1;
-			if (!(sp = malloc(sizeof(t_sprite))))
-			{
-				free(slab);
-				return (NULL);
-			}
-			sp->x = (*i + 0.5) * CUB_SIZE;
-			sp->y = (g->map.y + 0.5) * CUB_SIZE;
-			if (!(sp_node = ft_lstnew(sp)))
-			{
-				free(sp);
-				free(slab);
-				return (NULL);
-			}
-			ft_lstadd_back(&(g->sprite_lst), sp_node);
+			free(slab);
+			return (NULL);
 		}
-		if (line[*i] == '0' || line[*i] == '1' || line[*i] == 'N'
-		|| line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W'
-		|| line[*i] == ' ' || line[*i] == '2')
+		if (cub_check_map_chr(line, i))
 			slab[j++] = line[*i];
 		else
 		{
 			free(slab);
 			return (NULL);
 		}
-		(*i)++;
 	}
-	if (j > g->map.x)
-		g->map.x = j;
+	g->map.x = j > g->map.x ? j : g->map.x;
 	slab[j] = '\0';
 	return (slab);
 }

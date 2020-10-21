@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 19:40:01 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 15:22:44 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,28 @@ void		parse_resolution(t_g *g, char *line, int *i)
 
 void		parse_color(t_g *game, unsigned int *color, char *line, int *i)
 {
-	int	r;
-	int	g;
-	int	b;
+	int		r;
+	int		g;
+	int		b;
+	int		temp;
 
 	if (*color != NONE)
 		cub_exit(game, -1, "Color setting error!");
 	(*i)++;
+	temp = *i;
 	r = ft_atoi_i(line, i);
+	if (temp == *i || line[*i] != ',')
+		cub_exit(game, -1, "Color field is empty");
 	(*i)++;
+	temp = *i;
 	g = ft_atoi_i(line, i);
+	if (temp == *i || line[*i] != ',')
+		cub_exit(game, -1, "Color field is empty");
 	(*i)++;
+	temp = *i;
 	b = ft_atoi_i(line, i);
+	if (temp == *i || line[*i] != ',')
+		cub_exit(game, -1, "Color field is empty");
 	skip_spaces(line, i);
 	if (line[*i] || r > 255 || g > 255 || b > 255 || r < 0 || g < 0 || b < 0)
 		cub_exit(game, -1, "Incorrect color value error!");
@@ -70,9 +80,9 @@ void		parse_line(t_g *g, char *line)
 		parse_texture(g, &(g->e), line, &i);
 	else if (line[i] == 'S' && line[i + 1] == ' ')
 		parse_texture(g, &(g->sp), line, &i);
-	else if (line[i] == 'F' && line[i + 1] == ' ')
+	else if (line[i] == 'F' && line[i + 1] == ' ' && (g->color |= 1))
 		parse_color(g, &(g->floor), line, &i);
-	else if (line[i] == 'C' && line[i + 1] == ' ')
+	else if (line[i] == 'C' && line[i + 1] == ' ' && (g->color |= 2))
 		parse_color(g, &(g->ceiling), line, &i);
 	if (skip_spaces(line, &i) && line[i] != '\0')
 		cub_exit(g, -1, "File parse error!");
@@ -93,6 +103,17 @@ void		cub_sprites_arr(t_g *g)
 		i++;
 	}
 	g->sprites[i] = 0;
+}
+
+int			check_params(t_g *g)
+{
+	if (!g->win.x || !g->win.y || !g->map.tab || !g->map.x || !g->map.y)
+		return (0);
+	if (!g->sp.addr || !g->n.addr || !g->s.addr || !g->e.addr || !g->w.addr)
+		return (0);
+	if (g->color != 3)
+		return (0);
+	return (1);
 }
 
 void		cub_parse(char *file, t_g *g)
@@ -116,6 +137,8 @@ void		cub_parse(char *file, t_g *g)
 		}
 	}
 	close(fd);
+	if (!(check_params(g)))
+		cub_exit(g, -1, "Not all params setted");
 	if (!(g->x_dists = malloc(sizeof(float) * g->win.x)))
 		cub_exit(g, -1, "Malloc error!");
 	cub_sprites_arr(g);

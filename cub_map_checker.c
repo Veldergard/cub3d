@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 19:58:33 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 19:46:45 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 15:01:29 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,30 +109,42 @@ int		cub_set_player(t_g *g)
 	return (1);
 }
 
+int		cub_is_inner_chr(char c)
+{
+	if (c == '0' || c == '2' || c == 'N' || c == 'S' || c == 'E' || c == 'W')
+		return (1);
+	return (0);
+}
+
+int		cub_check_cell(t_g *g, int y, int x)
+{
+	if ((x == 0 || y == 0 || x == g->map.x - 1 || y == g->map.y - 1)
+		&& cub_is_inner_chr(g->map.tab[y][x]))
+		return (0);
+	if ((x > 0 && y > 0 && x < g->map.x - 1 && y < g->map.y - 1)
+		&& cub_is_inner_chr(g->map.tab[y][x])
+		&& !cub_is_inner_chr(g->map.tab[y - 1][x])
+		&& !cub_is_inner_chr(g->map.tab[y][x - 1])
+		&& !cub_is_inner_chr(g->map.tab[y + 1][x])
+		&& !cub_is_inner_chr(g->map.tab[y][x + 1]))
+		return (0);
+	return (1);
+}
+
 int		cub_check_map(t_g *g)
 {
-	int i;
-	int j;
+	int y;
+	int x;
 
-	i = -1;
-	while (g->map.tab[++i])
+	y = -1;
+	while (g->map.tab[++y])
 	{
-		j = -1;
-		while (g->map.tab[i][++j])
+		x = -1;
+		while (g->map.tab[y][++x])
 		{
-			if (g->map.tab[i][j] == ' ')
+			if (g->map.tab[y][x] == ' ')
 			{
-				if ((j == 0 && g->map.tab[i][j] == '0') ||
-					(i == 0 && g->map.tab[i][j] == '0'))
-					return (0);
-				if ((j > 0 && (g->map.tab[i][j - 1] != ' ' ||
-					g->map.tab[i][j - 1] != '1')) ||
-					(g->map.tab[i][j + 1] != ' ' || g->map.tab[i][j + 1] != '0'
-					|| g->map.tab[i][j + 1] != '1') || (g->map.tab[i + 1] &&
-					(g->map.tab[i + 1][j] != '1' ||
-					g->map.tab[i + 1][j] != ' ')) || (i > 0 &&
-					(g->map.tab[i - 1][j] != '1' ||
-					g->map.tab[i - 1][j] != ' ')))
+				if (!cub_check_cell(g, y, x))
 					return (0);
 			}
 		}

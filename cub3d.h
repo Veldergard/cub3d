@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 19:41:34 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 15:16:07 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ typedef struct		s_g
 {
 	t_win			win;
 	t_img			img;
+	char			color;
 	unsigned int	floor;
 	unsigned int	ceiling;
 	t_img			n;
