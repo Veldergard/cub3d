@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 19:37:21 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 16:15:50 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 19:27:38 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,9 @@ void			cub_parse_map(t_g *g, char *line, int *i)
 
 	if (!(tmp = malloc(sizeof(char*) * (g->map.y + 2))))
 		cub_exit(g, -1, "Malloc error!");
+	if (!g->map.is_parsing)
+		cub_exit(g, -1, "Not all params setted before map setting");
+	g->map.is_parsing = 1;
 	j = -1;
 	while (++j < g->map.y)
 		tmp[j] = g->map.tab[j];

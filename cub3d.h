@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 18:12:15 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 19:24:06 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct		s_map
 	char			**tab;
 	int				x;
 	int				y;
+	char			is_parsing;
 }					t_map;
 
 typedef struct		s_win

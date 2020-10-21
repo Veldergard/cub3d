@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 18:15:14 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 19:28:44 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ static void		cub_parse_line(t_g *g, char *line)
 	int i;
 
 	i = 0;
-	if (cub_skip_spaces(line, &i) && (!line || !*line))
+	if (cub_skip_spaces(line, &i) && !line)
 		return ;
-	if (line[i] == '1')
+	if (g->map.is_parsing || line[i] == '1')
 		cub_parse_map(g, line, &i);
 	else if (line[i] == 'R' && line[i + 1] == ' ')
 		cub_parse_resolution(g, line, &i);
@@ -125,7 +125,7 @@ void			cub_parse(char *file, t_g *g)
 		}
 	}
 	close(fd);
-	if (!(cub_check_params(g)))
+	if (!g->map.x || !g->map.y || !g->map.tab)
 		cub_exit(g, -1, "Not all params setted");
 	if (!(g->x_dists = malloc(sizeof(float) * g->win.x)))
 		cub_exit(g, -1, "Malloc error!");

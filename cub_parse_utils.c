@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 19:39:37 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 18:12:09 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 19:27:06 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,9 @@ void			cub_parse_texture(t_g *g, t_img *adr, char *line, int *i)
 
 int				cub_check_params(t_g *g)
 {
-	if (!g->win.x || !g->win.y || !g->map.tab || !g->map.x || !g->map.y)
+	if (!g->win.x || !g->win.y || g->color != 3)
 		return (0);
 	if (!g->sp.addr || !g->n.addr || !g->s.addr || !g->e.addr || !g->w.addr)
-		return (0);
-	if (g->color != 3)
 		return (0);
 	return (1);
 }
