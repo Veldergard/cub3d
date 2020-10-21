@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 04:05:18 by olaurine          #+#    #+#             */
-/*   Updated: 2020/08/21 20:50:09 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 17:12:11 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int		get_next_line(int fd, char **line)
 		if (!remainder && !(remainder = NULL))
 			return (-1);
 		if ((p_n = ft_strchr(remainder, '\n')))
-			break;
+			break ;
 	}
 	return (check_read(&p_n, line, &remainder, readed));
 }
