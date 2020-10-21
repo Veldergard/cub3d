@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 19:37:21 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 19:27:38 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 19:41:41 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int		cub_add_sprite(t_g *g, int *i, char *line)
 	t_sprite	*sp;
 	t_list		*sp_node;
 
-	if (line[*i] == 2)
+	if (line[*i] == '2')
 	{
 		g->spr_cnt += 1;
 		if (!(sp = malloc(sizeof(t_sprite))))
@@ -98,7 +98,7 @@ void			cub_parse_map(t_g *g, char *line, int *i)
 
 	if (!(tmp = malloc(sizeof(char*) * (g->map.y + 2))))
 		cub_exit(g, -1, "Malloc error!");
-	if (!g->map.is_parsing)
+	if (!g->map.is_parsing && !cub_check_params(g))
 		cub_exit(g, -1, "Not all params setted before map setting");
 	g->map.is_parsing = 1;
 	j = -1;

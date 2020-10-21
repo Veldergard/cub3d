@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 20:30:47 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 17:07:50 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 19:45:54 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void		cub_set_vertical(t_g *g, t_wall *wall)
 	}
 	else if (cos(wall->ray) < -0.001)
 	{
-		wall->rx = (((int)g->player.x >> 6) << 6) - 0.0001;
+		wall->rx = (((int)g->player.x >> 6) << 6) - 2.F / g->win.x;
 		wall->ry = (g->player.x - wall->rx) * wall->m_tan + g->player.y;
 		wall->xo = -64;
 		wall->yo = -wall->xo * wall->m_tan;
@@ -68,7 +68,7 @@ static void		cub_set_horizontal(t_g *g, t_wall *wall)
 {
 	if (sin(wall->ray) > 0.001)
 	{
-		wall->ry = (((int)g->player.y >> 6) << 6) - 0.0001;
+		wall->ry = (((int)g->player.y >> 6) << 6) - 2.F / g->win.x;
 		wall->rx = (g->player.y - wall->ry) * wall->m_tan + g->player.x;
 		wall->yo = -64;
 		wall->xo = -wall->yo * wall->m_tan;
