@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 01:45:34 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 16:30:13 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 18:15:14 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ static void		cub_parse_resolution(t_g *g, char *line, int *i)
 	(*i)++;
 	g->win.x = ft_atoi_i(line, i);
 	g->win.y = ft_atoi_i(line, i);
-	if (g->win.x > 16000)
-		g->win.x = 16000;
-	if (g->win.y > 16000)
-		g->win.y = 16000;
+	if (g->win.x > 2560)
+		g->win.x = 2560;
+	if (g->win.y > 1440)
+		g->win.y = 1440;
 	(*i) += ft_num_len(line);
 	cub_skip_spaces(line, i);
 	if (g->win.x <= 0 || g->win.y <= 0 || line[*i])
@@ -113,12 +113,12 @@ void			cub_parse(char *file, t_g *g)
 
 	r = 1;
 	errno = 0;
-	if ((fd = open(file, O_RDONLY)) == -1 || errno)
+	if (!cub_check_ending(file, "cub") ||
+		(fd = open(file, O_RDONLY)) == -1 || errno)
 		cub_exit(g, -1, "File open error!");
 	while (r == 1)
 	{
-		r = get_next_line(fd, &line);
-		if (r == 1 || r == 0)
+		if ((r = get_next_line(fd, &line)) == 1 || r == 0)
 		{
 			cub_parse_line(g, line);
 			free(line);

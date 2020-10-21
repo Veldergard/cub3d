@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:10:12 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 17:07:58 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 18:12:15 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,5 +165,6 @@ void				cub_render_next_frame(t_g *g);
 void				cub_draw_line(t_g *g, t_wall *wall, int side);
 void				cub_pixel_put(t_g *g, int x, int y, int color);
 void				cub_raycaster(t_g *g, t_wall *wall, int *side);
+int					cub_check_ending(char *file, char *ext);
 
 #endif

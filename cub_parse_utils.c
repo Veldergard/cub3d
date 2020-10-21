@@ -6,7 +6,7 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 19:39:37 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 16:42:09 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 18:12:09 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int				cub_skip_spaces(char *line, int *i)
 	return (1);
 }
 
-static int		cub_check_ending(char *file, char *ext)
+int				cub_check_ending(char *file, char *ext)
 {
 	int	i;
 
