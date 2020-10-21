@@ -6,20 +6,20 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 19:39:37 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 19:40:16 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 16:26:05 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int			skip_spaces(char *line, int *i)
+int				cub_skip_spaces(char *line, int *i)
 {
 	while (line && ((line[*i] >= 9 && line[*i] <= 13) || line[*i] == 32))
 		(*i)++;
 	return (1);
 }
 
-int			check_ending(char *file, char *ext)
+static int		cub_check_ending(char *file, char *ext)
 {
 	int	i;
 
@@ -32,11 +32,11 @@ int			check_ending(char *file, char *ext)
 	return (0);
 }
 
-void		cub_xpm(t_g *g, t_img *adr, char *file)
+static void		cub_xpm(t_g *g, t_img *adr, char *file)
 {
 	int		fd;
 
-	if (!check_ending(file, "xpm"))
+	if (!cub_check_ending(file, "xpm"))
 	{
 		free(file);
 		cub_exit(g, -1, "File type error!");
@@ -58,7 +58,7 @@ void		cub_xpm(t_g *g, t_img *adr, char *file)
 		&(adr->endian));
 }
 
-void		parse_texture(t_g *g, t_img *adr, char *line, int *i)
+void			cub_parse_texture(t_g *g, t_img *adr, char *line, int *i)
 {
 	char	*file;
 	int		j;
@@ -78,4 +78,15 @@ void		parse_texture(t_g *g, t_img *adr, char *line, int *i)
 	file[j] = '\0';
 	cub_xpm(g, adr, file);
 	free(file);
+}
+
+int				cub_check_params(t_g *g)
+{
+	if (!g->win.x || !g->win.y || !g->map.tab || !g->map.x || !g->map.y)
+		return (0);
+	if (!g->sp.addr || !g->n.addr || !g->s.addr || !g->e.addr || !g->w.addr)
+		return (0);
+	if (g->color != 3)
+		return (0);
+	return (1);
 }

@@ -6,13 +6,13 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 16:38:26 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 17:32:25 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 16:10:49 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-unsigned int	get_color(t_img *i, int x, int y)
+static unsigned int	cub_get_color(t_img *i, int x, int y)
 {
 	char	*dst;
 
@@ -20,7 +20,7 @@ unsigned int	get_color(t_img *i, int x, int y)
 	return (*(unsigned int*)dst);
 }
 
-void			cub_bitmap(t_g *g, int fd)
+static void			cub_bitmap(t_g *g, int fd)
 {
 	int		i;
 	int		j;
@@ -32,7 +32,7 @@ void			cub_bitmap(t_g *g, int fd)
 		j = 0;
 		while (j < (int)g->win.x)
 		{
-			color = get_color(&g->img, j, i);
+			color = cub_get_color(&g->img, j, i);
 			if (write(fd, &color, 4) < 0)
 				cub_exit(g, -1, "File writing error!");
 			j++;
@@ -41,7 +41,7 @@ void			cub_bitmap(t_g *g, int fd)
 	}
 }
 
-void			cub_bmp_header(t_g *g, int fd)
+static void			cub_bmp_header(t_g *g, int fd)
 {
 	int		header_info_size;
 	int		plane_nbr;
@@ -64,7 +64,7 @@ void			cub_bmp_header(t_g *g, int fd)
 	}
 }
 
-void			cub_bmp(t_g *g)
+void				cub_bmp(t_g *g)
 {
 	int		fd;
 	int		file_size;

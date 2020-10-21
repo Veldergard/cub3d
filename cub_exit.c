@@ -6,13 +6,13 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 19:01:28 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/20 19:04:11 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 16:11:31 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	cub_free_map(t_g *g)
+static void	cub_free_map(t_g *g)
 {
 	int		i;
 
@@ -26,7 +26,7 @@ void	cub_free_map(t_g *g)
 		free(g->map.tab);
 }
 
-void	cub_free_sprites(t_g *g)
+static void	cub_free_sprites(t_g *g)
 {
 	int i;
 
@@ -41,7 +41,7 @@ void	cub_free_sprites(t_g *g)
 		free(ft_lstpop_left(&g->sprite_lst));
 }
 
-void	cub_free(t_g *g)
+static void	cub_free(t_g *g)
 {
 	if (g->map.tab)
 		cub_free_map(g);
@@ -63,7 +63,7 @@ void	cub_free(t_g *g)
 		free(g->mlx);
 }
 
-void	cub_exit(t_g *g, int status, char *msg)
+void		cub_exit(t_g *g, int status, char *msg)
 {
 	if (g->img.img)
 		mlx_destroy_image(g->mlx, g->img.img);

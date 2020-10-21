@@ -6,13 +6,13 @@
 /*   By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 19:37:21 by olaurine          #+#    #+#             */
-/*   Updated: 2020/10/21 14:43:17 by olaurine         ###   ########.fr       */
+/*   Updated: 2020/10/21 16:15:50 by olaurine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int			cub_slablen(char *line)
+static int		cub_slablen(char *line)
 {
 	int	i;
 	int	count;
@@ -29,7 +29,7 @@ int			cub_slablen(char *line)
 	return (count);
 }
 
-int			cub_add_sprite(t_g *g, int *i, char *line)
+static int		cub_add_sprite(t_g *g, int *i, char *line)
 {
 	t_sprite	*sp;
 	t_list		*sp_node;
@@ -53,7 +53,7 @@ int			cub_add_sprite(t_g *g, int *i, char *line)
 	return (1);
 }
 
-int			cub_check_map_chr(char *line, int *i)
+static int		cub_check_map_chr(char *line, int *i)
 {
 	if (line[*i] == '0' || line[*i] == '1' || line[*i] == 'N'
 		|| line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W'
@@ -62,7 +62,7 @@ int			cub_check_map_chr(char *line, int *i)
 	return (0);
 }
 
-char		*cub_slab(t_g *g, char *line, int *i)
+static char		*cub_slab(t_g *g, char *line, int *i)
 {
 	char		*slab;
 	int			j;
@@ -91,7 +91,7 @@ char		*cub_slab(t_g *g, char *line, int *i)
 	return (slab);
 }
 
-void		parse_map(t_g *g, char *line, int *i)
+void			cub_parse_map(t_g *g, char *line, int *i)
 {
 	char	**tmp;
 	int		j;
